@@ -1,8 +1,31 @@
+import config from '../../config'
+import { TStudent } from '../student/student.interface'
+import { Student } from '../student/student.model'
 import { IUser } from './user.interface'
 import { UserModel } from './user.model'
 
-const createStudentIntoDB = async (payload: IUser) => {
-  const response = await UserModel.create(payload)
+const createStudentIntoDB = async (
+  studentData: TStudent,
+  password?: string,
+) => {
+  // create role
+  const userData: Partial<IUser> = {
+    role: 'student',
+    id: '2030100003',
+  }
+
+  // if password not given, use default password
+  userData.password = password || (config.default_password as string)
+
+  const response = await UserModel.create(userData)
+  if (Object.keys(response).length) {
+    // set id and _id as user
+    studentData.id = response.id
+    studentData.user = response._id
+
+    const newStudent = Student.create(studentData)
+    return newStudent
+  }
   return response
 }
 
