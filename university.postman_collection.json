@@ -1,0 +1,47 @@
+{
+	"info": {
+		"_postman_id": "2df226c4-8cf8-42f4-92ab-af7d966c0c6a",
+		"name": "university",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15075686",
+		"_collection_link": "https://planetary-water-650250.postman.co/workspace/padelmate~cda343c3-8d8f-430f-80ce-b3dc7ccedc48/collection/15075686-2df226c4-8cf8-42f4-92ab-af7d966c0c6a?action=share&source=collection_link&creator=15075686"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"\",\n    \"student\": {\n        \"name\": {\n            \"firstName\": \"Mahdi\",\n            \"middleName\": \"AAA\",\n            \"lastName\": \"DDD\"\n        },\n        \"gender\": \"male\",\n        \"dateOfBirth\": \"2000-01-01\",\n        \"email\": \"john111@gmail.com\",\n        \"contactNo\": \"123-456-7890\",\n        \"emergencyContactNo\": \"098-765-4321\",\n        \"bloodGroup\": \"O+\",\n        \"presentAddress\": \"123 Main St, Cityville, Country\",\n        \"permanentAddress\": \"456 Another St, Cityville, Country\",\n        \"guardian\": {\n            \"fatherName\": \"Robert Doe\",\n            \"fatherOccupation\": \"Engineer\",\n            \"fatherContactNo\": \"111-222-3333\",\n            \"motherName\": \"Jane Doe\",\n            \"motherOccupation\": \"Teacher\",\n            \"motherContactNo\": \"444-555-6666\"\n        },\n        \"localGuardian\": {\n            \"name\": \"Emily Smith\",\n            \"occupation\": \"Doctor\",\n            \"contactNo\": \"777-888-9999\",\n            \"address\": \"789 Guardian St, Cityville, Country\"\n        },\n        \"profileImg\": \"http://example.com/profiles/johndoe.jpg\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/v1/users/create-student",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"create-student"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
