@@ -54,7 +54,7 @@ userSchema.pre('save', function (next) {
     });
 });
 userSchema.post('save', function (document, next) {
-    document.password = undefined;
+    delete document.password;
     next();
 });
 exports.UserModel = (0, mongoose_1.model)('User', userSchema);

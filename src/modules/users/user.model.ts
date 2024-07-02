@@ -46,7 +46,7 @@ userSchema.pre('save', async function (next) {
 })
 
 userSchema.post('save', function (document, next) {
-  document.password = undefined
+  delete document.password
   next()
 })
 
