@@ -1,14 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import httpStatus from 'http-status'
+import catchAsync from '../../utils/catchAsync'
 import sendResponse from '../../utils/sendResponse'
 import { StudentServices } from './student.service'
 
-const getAllStudents = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+const getAllStudents = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await StudentServices.getAllStudentsFromDB()
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -16,17 +13,11 @@ const getAllStudents = async (
       message: 'Students are retrieved successfully!',
       data: result,
     })
-  } catch (err) {
-    next(err)
-  }
-}
+  },
+)
 
-const getStudentById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+const getStudentById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { studentId } = req.params
 
     const result = await StudentServices.getStudentFromDB(studentId)
@@ -37,17 +28,11 @@ const getStudentById = async (
       message: 'Student is retrieved successfully!',
       data: result,
     })
-  } catch (err) {
-    next(err)
-  }
-}
+  },
+)
 
-const deleteStudentById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+const deleteStudentById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { studentId } = req.params
 
     const result = await StudentServices.deleteStudentFromDB(studentId)
@@ -58,10 +43,8 @@ const deleteStudentById = async (
       message: 'Student is deleted successfully!',
       data: result,
     })
-  } catch (err) {
-    next(err)
-  }
-}
+  },
+)
 
 const updateStudentDataByID = async (req: Request, res: Response) => {
   try {

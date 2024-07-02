@@ -1,14 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
 import httpStatus from 'http-status'
+import catchAsync from '../../utils/catchAsync'
 import sendResponse from '../../utils/sendResponse'
 import { UserServices } from './user.service'
 
-const createStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
+const createStudent = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { password, student } = req.body
     // const zodUserValidationSchema = UserValidation.parse(password)
     // console.log(zodUserValidationSchema)
@@ -23,10 +20,8 @@ const createStudent = async (
       message: 'Student is created successfully!',
       data: response,
     })
-  } catch (error) {
-    next(error)
-  }
-}
+  },
+)
 
 export const UserControllers = {
   createStudent,

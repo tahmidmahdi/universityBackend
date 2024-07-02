@@ -14,52 +14,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StudentControllers = void 0;
 const http_status_1 = __importDefault(require("http-status"));
+const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const student_service_1 = require("./student.service");
-const getAllStudents = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield student_service_1.StudentServices.getAllStudentsFromDB();
-        (0, sendResponse_1.default)(res, {
-            statusCode: http_status_1.default.OK,
-            success: true,
-            message: 'Students are retrieved successfully!',
-            data: result,
-        });
-    }
-    catch (err) {
-        next(err);
-    }
-});
-const getStudentById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { studentId } = req.params;
-        const result = yield student_service_1.StudentServices.getStudentFromDB(studentId);
-        (0, sendResponse_1.default)(res, {
-            statusCode: http_status_1.default.OK,
-            success: true,
-            message: 'Student is retrieved successfully!',
-            data: result,
-        });
-    }
-    catch (err) {
-        next(err);
-    }
-});
-const deleteStudentById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { studentId } = req.params;
-        const result = yield student_service_1.StudentServices.deleteStudentFromDB(studentId);
-        (0, sendResponse_1.default)(res, {
-            statusCode: http_status_1.default.OK,
-            success: true,
-            message: 'Student is deleted successfully!',
-            data: result,
-        });
-    }
-    catch (err) {
-        next(err);
-    }
-});
+const getAllStudents = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield student_service_1.StudentServices.getAllStudentsFromDB();
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Students are retrieved successfully!',
+        data: result,
+    });
+}));
+const getStudentById = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { studentId } = req.params;
+    const result = yield student_service_1.StudentServices.getStudentFromDB(studentId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Student is retrieved successfully!',
+        data: result,
+    });
+}));
+const deleteStudentById = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { studentId } = req.params;
+    const result = yield student_service_1.StudentServices.deleteStudentFromDB(studentId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Student is deleted successfully!',
+        data: result,
+    });
+}));
 const updateStudentDataByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { studentId } = req.params;
