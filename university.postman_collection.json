@@ -4,7 +4,7 @@
 		"name": "university",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "15075686",
-		"_collection_link": "https://web.postman.co/workspace/padelmate~cda343c3-8d8f-430f-80ce-b3dc7ccedc48/collection/15075686-2df226c4-8cf8-42f4-92ab-af7d966c0c6a?action=share&source=collection_link&creator=15075686"
+		"_collection_link": "https://planetary-water-650250.postman.co/workspace/padelmate~cda343c3-8d8f-430f-80ce-b3dc7ccedc48/collection/15075686-2df226c4-8cf8-42f4-92ab-af7d966c0c6a?action=share&source=collection_link&creator=15075686"
 	},
 	"item": [
 		{
@@ -74,6 +74,30 @@
 								"create-academic-semester"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllAcademicSemesters",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "getSemester",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "updateAcademicSemester",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
