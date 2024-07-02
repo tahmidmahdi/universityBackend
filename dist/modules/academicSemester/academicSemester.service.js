@@ -12,9 +12,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AcademicSemesterServices = void 0;
 const academicSemester_model_1 = require("./academicSemester.model");
 const createAcademicSemesterIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const academicSemesterMapper = {
+        Autumn: '01',
+        Summer: '02',
+        Fall: '03',
+    };
+    if (academicSemesterMapper[payload.name] !== payload.code) {
+        throw new Error('Invalid semester code!');
+    }
     const response = yield academicSemester_model_1.AcademicSemester.create(payload);
+    return response;
+});
+const getAllAcademicSemesterFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield academicSemester_model_1.AcademicSemester.find();
+    return response;
+});
+const getAcademicSemesterFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield academicSemester_model_1.AcademicSemester.findById({ _id: id });
+    return response;
+});
+const updateAcademicSemesterFromDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield academicSemester_model_1.AcademicSemester.findOneAndUpdate({ _id: id }, payload, {
+        new: true,
+    });
     return response;
 });
 exports.AcademicSemesterServices = {
     createAcademicSemesterIntoDB,
+    getAllAcademicSemesterFromDB,
+    getAcademicSemesterFromDB,
+    updateAcademicSemesterFromDB,
 };

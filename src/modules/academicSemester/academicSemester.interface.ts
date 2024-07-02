@@ -19,3 +19,7 @@ export interface IAcademicSemester {
   startMonth: MonthType
   endMonth: MonthType
 }
+
+export interface IAcademicSemesterMapper {
+  [key: string]: string
+}

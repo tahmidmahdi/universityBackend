@@ -17,8 +17,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const academicSemester_service_1 = require("./academicSemester.service");
-const createAcademicSemester = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { academicSemester } = req.body;
+const createAcademicSemester = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield academicSemester_service_1.AcademicSemesterServices.createAcademicSemesterIntoDB(req.body);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
@@ -27,6 +26,38 @@ const createAcademicSemester = (0, catchAsync_1.default)((req, res, next) => __a
         data: response,
     });
 }));
+const getAllAcademicSemester = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield academicSemester_service_1.AcademicSemesterServices.getAllAcademicSemesterFromDB();
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Academic Semesters retrieved successfully!',
+        data: response,
+    });
+}));
+const getAcademicSemester = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { semesterId } = req.params;
+    const response = yield academicSemester_service_1.AcademicSemesterServices.getAcademicSemesterFromDB(semesterId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Academic Semester retrieved successfully!',
+        data: response,
+    });
+}));
+const updateAcademicSemester = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { semesterId } = req.params;
+    const response = yield academicSemester_service_1.AcademicSemesterServices.updateAcademicSemesterFromDB(semesterId, req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Academic Semester retrieved successfully!',
+        data: response,
+    });
+}));
 exports.AcademicSemesterControllers = {
     createAcademicSemester,
+    getAllAcademicSemester,
+    getAcademicSemester,
+    updateAcademicSemester,
 };
