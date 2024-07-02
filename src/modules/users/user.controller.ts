@@ -7,13 +7,8 @@ import { UserServices } from './user.service'
 const createStudent = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { password, student } = req.body
-    // const zodUserValidationSchema = UserValidation.parse(password)
-    // console.log(zodUserValidationSchema)
 
-    const response = await UserServices.createStudentIntoDB(
-      student,
-      password as string,
-    )
+    const response = await UserServices.createStudentIntoDB(student, password)
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
