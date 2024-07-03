@@ -13,5 +13,5 @@ router
     .post('/create-academic-semester', (0, validateRequest_1.default)(academicSemester_validation_1.AcademicSemesterValidation.createAcademicSemesterValidationSchema), academicSemester_controller_1.AcademicSemesterControllers.createAcademicSemester)
     .get('/', academicSemester_controller_1.AcademicSemesterControllers.getAllAcademicSemester)
     .get('/:semesterId', academicSemester_controller_1.AcademicSemesterControllers.getAcademicSemester)
-    .patch('/:semesterId', academicSemester_controller_1.AcademicSemesterControllers.updateAcademicSemester);
+    .patch('/:semesterId', (0, validateRequest_1.default)(academicSemester_validation_1.AcademicSemesterValidation.updateAcademicSemesterValidationSchema), academicSemester_controller_1.AcademicSemesterControllers.updateAcademicSemester);
 exports.AcademicSemesterRoutes = router;

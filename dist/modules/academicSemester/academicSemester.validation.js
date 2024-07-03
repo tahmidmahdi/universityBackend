@@ -49,6 +49,46 @@ const createAcademicSemesterValidationSchema = zod_1.z.object({
         }),
     }),
 });
+const updateAcademicSemesterValidationSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        name: zod_1.z.enum(['Autumn', 'Summer', 'Fall']).optional(),
+        year: zod_1.z.string().optional(),
+        code: zod_1.z.enum(['01', '02', '03']).optional(),
+        startMonth: zod_1.z
+            .enum([
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+        ])
+            .optional(),
+        endMonth: zod_1.z
+            .enum([
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+        ])
+            .optional(),
+    }),
+});
 exports.AcademicSemesterValidation = {
     createAcademicSemesterValidationSchema,
+    updateAcademicSemesterValidationSchema,
 };

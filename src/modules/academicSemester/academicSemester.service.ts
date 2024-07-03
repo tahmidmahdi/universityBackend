@@ -12,7 +12,11 @@ const createAcademicSemesterIntoDB = async (payload: IAcademicSemester) => {
     Fall: '03',
   }
 
-  if (academicSemesterMapper[payload.name] !== payload.code) {
+  if (
+    payload.name &&
+    payload.year &&
+    academicSemesterMapper[payload.name] !== payload.code
+  ) {
     throw new Error('Invalid semester code!')
   }
 

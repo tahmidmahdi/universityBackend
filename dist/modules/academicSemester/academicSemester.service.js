@@ -17,7 +17,9 @@ const createAcademicSemesterIntoDB = (payload) => __awaiter(void 0, void 0, void
         Summer: '02',
         Fall: '03',
     };
-    if (academicSemesterMapper[payload.name] !== payload.code) {
+    if (payload.name &&
+        payload.year &&
+        academicSemesterMapper[payload.name] !== payload.code) {
         throw new Error('Invalid semester code!');
     }
     const response = yield academicSemester_model_1.AcademicSemester.create(payload);
