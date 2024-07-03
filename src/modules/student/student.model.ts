@@ -137,6 +137,10 @@ const studentSchema = new Schema<TStudent>(
       type: String,
       required: [true, 'Present Address is required'],
     },
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicSemester',
+    },
     permanentAddress: {
       type: String,
       required: [true, 'Permanent Address is required'],

@@ -32,6 +32,7 @@ const createStudentValidationSchema = z.object({
       email: z.string().email(),
       contactNo: z.string().min(1),
       emergencyContactNo: z.string().min(1),
+      admissionSemester: z.string(),
       bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
       presentAddress: z.string().min(1),
       permanentAddress: z.string().min(1),

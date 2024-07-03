@@ -22,6 +22,8 @@ const createStudentIntoDB = (studentData, password) => __awaiter(void 0, void 0,
         role: 'student',
         id: '2030100003',
     };
+    // year semesterCode 4digitNumber
+    const generateStudentId = (payload) => { };
     // if password not given, use default password
     userData.password = password || config_1.default.default_password;
     const response = yield user_model_1.UserModel.create(userData);

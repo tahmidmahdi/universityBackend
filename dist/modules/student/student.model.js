@@ -131,6 +131,10 @@ const studentSchema = new mongoose_1.Schema({
         type: String,
         required: [true, 'Present Address is required'],
     },
+    admissionSemester: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'AcademicSemester',
+    },
     permanentAddress: {
         type: String,
         required: [true, 'Permanent Address is required'],

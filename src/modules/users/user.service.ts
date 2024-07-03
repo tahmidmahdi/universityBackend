@@ -1,4 +1,5 @@
 import config from '../../config'
+import { IAcademicSemester } from '../academicSemester/academicSemester.interface'
 import { TStudent } from '../student/student.interface'
 import { Student } from '../student/student.model'
 import { IUser } from './user.interface'
@@ -14,6 +15,8 @@ const createStudentIntoDB = async (
     id: '2030100003',
   }
 
+  // year semesterCode 4digitNumber
+  const generateStudentId = (payload: IAcademicSemester) => {}
   // if password not given, use default password
   userData.password = password || (config.default_password as string)
 
