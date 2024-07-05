@@ -2,6 +2,7 @@ import express, { Router } from 'express'
 import { AcademicSemesterRoutes } from '../modules/academicSemester/academicSemester.route'
 import { StudentRoutes } from '../modules/student/student.route'
 import { UserRoutes } from '../modules/users/user.route'
+import { AcademicFacultyRoutes } from './../modules/academicFaculty/academicFaculty.route'
 
 interface IRoutes {
   path: string
@@ -22,6 +23,10 @@ const moduleRoutes: Array<IRoutes> = [
   {
     path: '/academic-semesters',
     route: AcademicSemesterRoutes,
+  },
+  {
+    path: '/academic-faculties',
+    route: AcademicFacultyRoutes,
   },
 ]
 
