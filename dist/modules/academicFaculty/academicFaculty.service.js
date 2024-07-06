@@ -24,7 +24,7 @@ const getAcademicFacultyFromDB = (id) => __awaiter(void 0, void 0, void 0, funct
     return response;
 });
 const updateAcademicFacultyIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield academicFaculty_model_1.AcademicFaculty.findById({ _id: id }, payload, {
+    const response = yield academicFaculty_model_1.AcademicFaculty.findOneAndUpdate({ _id: id }, payload, {
         new: true,
     });
     return response;

@@ -14,7 +14,7 @@ router
   .get('/:facultyId', AcademicFacultyControllers.getAcademicFaculty)
   .get('/', AcademicFacultyControllers.getAllAcademicFaculty)
   .patch(
-    '/facultyId',
+    '/:facultyId',
     validateRequest(
       AcademicFacultyValidation.updateAcademicSemesterValidationSchema,
     ),
