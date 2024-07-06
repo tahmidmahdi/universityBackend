@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"password\": \"\",\n    \"student\": {\n        \"name\": {\n            \"firstName\": \"Mahdi\",\n            \"middleName\": \"AAA\",\n            \"lastName\": \"DDD\"\n        },\n        \"gender\": \"male\",\n        \"dateOfBirth\": \"2000-01-01\",\n        \"email\": \"john1@gmail.com\",\n        \"contactNo\": \"123-456-7890\",\n        \"emergencyContactNo\": \"098-765-4321\",\n        \"bloodGroup\": \"O+\",\n        \"presentAddress\": \"123 Main St, Cityville, Country\",\n        \"permanentAddress\": \"456 Another St, Cityville, Country\",\n        \"guardian\": {\n            \"fatherName\": \"Robert Doe\",\n            \"fatherOccupation\": \"Engineer\",\n            \"fatherContactNo\": \"111-222-3333\",\n            \"motherName\": \"Jane Doe\",\n            \"motherOccupation\": \"Teacher\",\n            \"motherContactNo\": \"444-555-6666\"\n        },\n        \"admissionSemester\": \"6685762ad674837b77c2f4da\",\n        \"localGuardian\": {\n            \"name\": \"Emily Smith\",\n            \"occupation\": \"Doctor\",\n            \"contactNo\": \"777-888-9999\",\n            \"address\": \"789 Guardian St, Cityville, Country\"\n        },\n        \"profileImg\": \"http://example.com/profiles/johndoe.jpg\"\n    }\n}",
+							"raw": "{\n    \"password\": \"\",\n    \"student\": {\n        \"name\": {\n            \"firstName\": \"Mahdi\",\n            \"middleName\": \"AAA\",\n            \"lastName\": \"DDD\"\n        },\n        \"gender\": \"male\",\n        \"dateOfBirth\": \"2000-01-01\",\n        \"email\": \"meAutumn2030@gmail.com\",\n        \"contactNo\": \"123-456\",\n        \"emergencyContactNo\": \"098-765-4321\",\n        \"bloodGroup\": \"O+\",\n        \"presentAddress\": \"123 Main St, Cityville, Country\",\n        \"permanentAddress\": \"456 Another St, Cityville, Country\",\n        \"guardian\": {\n            \"fatherName\": \"Robert Doe\",\n            \"fatherOccupation\": \"Engineer\",\n            \"fatherContactNo\": \"111-222-3333\",\n            \"motherName\": \"Jane Doe\",\n            \"motherOccupation\": \"Teacher\",\n            \"motherContactNo\": \"444-555-6666\"\n        },\n        \"admissionSemester\": \"66857b347aa58d139cb04127\",\n        \"localGuardian\": {\n            \"name\": \"Emily Smith\",\n            \"occupation\": \"Doctor\",\n            \"contactNo\": \"777-888-9999\",\n            \"address\": \"789 Guardian St, Cityville, Country\"\n        },\n        \"profileImg\": \"http://example.com/profiles/johndoe.jpg\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -53,7 +53,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Fall\",\n    \"code\": \"03\",\n    \"year\": \"2030\",\n    \"startMonth\": \"November\",\n    \"endMonth\": \"November\"\n}",
+							"raw": "{\n    \"name\": \"Summer\",\n    \"code\": \"02\",\n    \"year\": \"2030\",\n    \"startMonth\": \"May\",\n    \"endMonth\": \"August\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -83,7 +83,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://localhost:5000/api/v1/academic-semesters/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"academic-semesters",
+								""
+							]
 						}
 					},
 					"response": []
@@ -101,11 +112,280 @@
 				},
 				{
 					"name": "updateAcademicSemester",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "students",
+			"item": [
+				{
+					"name": "create-student Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student\": {\n        \"id\": \"123456\",\n        \"password\": \"helloDB\",\n        \"name\": {\n            \"firstName\": \"Mahdi\",\n            \"middleName\": \"AAA\",\n            \"lastName\": \"DDD\"\n        },\n        \"gender\": \"male\",\n        \"dateOfBirth\": \"2000-01-01\",\n        \"email\": \"john1@gmail.com\",\n        \"contactNo\": \"123-456-7890\",\n        \"emergencyContactNo\": \"098-765-4321\",\n        \"bloodGroup\": \"O+\",\n        \"presentAddress\": \"123 Main St, Cityville, Country\",\n        \"permanentAddress\": \"456 Another St, Cityville, Country\",\n        \"guardian\": {\n            \"fatherName\": \"Robert Doe\",\n            \"fatherOccupation\": \"Engineer\",\n            \"fatherContactNo\": \"111-222-3333\",\n            \"motherName\": \"Jane Doe\",\n            \"motherOccupation\": \"Teacher\",\n            \"motherContactNo\": \"444-555-6666\"\n        },\n        \"localGuardian\": {\n            \"name\": \"Emily Smith\",\n            \"occupation\": \"Doctor\",\n            \"contactNo\": \"777-888-9999\",\n            \"address\": \"789 Guardian St, Cityville, Country\"\n        },\n        \"profileImg\": \"http://example.com/profiles/johndoe.jpg\",\n        \"isActive\": \"active\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{university-url}}/students/create-student",
+							"host": [
+								"{{university-url}}"
+							],
+							"path": [
+								"students",
+								"create-student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllStudents Copy",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://localhost:5000/api/v1/students",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteStudent Copy",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "findStudent Copy",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "academic-faculties",
+			"item": [
+				{
+					"name": "create-faculty",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Faculty of Business\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{university-url}}/academic-faculties/create-academic-faculty",
+							"host": [
+								"{{university-url}}"
+							],
+							"path": [
+								"academic-faculties",
+								"create-academic-faculty"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllFaculities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{university-url}}/academic-faculties",
+							"host": [
+								"{{university-url}}"
+							],
+							"path": [
+								"academic-faculties"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAFaculty",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{university-url}}/academic-faculties/6688cb16e342825ccc48a290",
+							"host": [
+								"{{university-url}}"
+							],
+							"path": [
+								"academic-faculties",
+								"6688cb16e342825ccc48a290"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update academic faculty",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Faculty of Testing\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{university-url}}/academic-faculties/6688cbbbe342825ccc48a295",
+							"host": [
+								"{{university-url}}"
+							],
+							"path": [
+								"academic-faculties",
+								"6688cbbbe342825ccc48a295"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "academic-department",
+			"item": [
+				{
+					"name": "create-academic-department",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"Department of Computer Science\",\n    \"academicFaculty\": \"6688cb16e342825ccc48a290\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{university-url}}/academic-departments/create-academic-department",
+							"host": [
+								"{{university-url}}"
+							],
+							"path": [
+								"academic-departments",
+								"create-academic-department"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "gat all academic departments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{university-url}}/academic-departments",
+							"host": [
+								"{{university-url}}"
+							],
+							"path": [
+								"academic-departments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Academic faculty",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{university-url}}/academic-departments/6688d9ccdb3a50698772e296",
+							"host": [
+								"{{university-url}}"
+							],
+							"path": [
+								"academic-departments",
+								"6688d9ccdb3a50698772e296"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update academic department",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Department of Computer Science & Engineering\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{university-url}}/academic-departments/6688d9ccdb3a50698772e296",
+							"host": [
+								"{{university-url}}"
+							],
+							"path": [
+								"academic-departments",
+								"6688d9ccdb3a50698772e296"
+							]
 						}
 					},
 					"response": []
