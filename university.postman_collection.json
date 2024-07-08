@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"password\": \"\",\n    \"student\": {\n        \"name\": {\n            \"firstName\": \"Mahdi\",\n            \"middleName\": \"AAA\",\n            \"lastName\": \"DDD\"\n        },\n        \"gender\": \"male\",\n        \"dateOfBirth\": \"2000-01-01\",\n        \"email\": \"meAutumn2030@gmail.com\",\n        \"contactNo\": \"123-456\",\n        \"emergencyContactNo\": \"098-765-4321\",\n        \"bloodGroup\": \"O+\",\n        \"presentAddress\": \"123 Main St, Cityville, Country\",\n        \"permanentAddress\": \"456 Another St, Cityville, Country\",\n        \"guardian\": {\n            \"fatherName\": \"Robert Doe\",\n            \"fatherOccupation\": \"Engineer\",\n            \"fatherContactNo\": \"111-222-3333\",\n            \"motherName\": \"Jane Doe\",\n            \"motherOccupation\": \"Teacher\",\n            \"motherContactNo\": \"444-555-6666\"\n        },\n        \"admissionSemester\": \"66857b347aa58d139cb04127\",\n        \"localGuardian\": {\n            \"name\": \"Emily Smith\",\n            \"occupation\": \"Doctor\",\n            \"contactNo\": \"777-888-9999\",\n            \"address\": \"789 Guardian St, Cityville, Country\"\n        },\n        \"profileImg\": \"http://example.com/profiles/johndoe.jpg\"\n    }\n}",
+							"raw": "{\n    \"password\": \"\",\n    \"student\": {\n        \"name\": {\n            \"firstName\": \"Mahdi\",\n            \"middleName\": \"AAA\",\n            \"lastName\": \"DDD\"\n        },\n        \"gender\": \"male\",\n        \"dateOfBirth\": \"2000-01-01\",\n        \"email\": \"meTransaction-2@gmail.com\",\n        \"contactNo\": \"12\",\n        \"emergencyContactNo\": \"098-765-4321\",\n        \"bloodGroup\": \"O+\",\n        \"presentAddress\": \"123 Main St, Cityville, Country\",\n        \"permanentAddress\": \"456 Another St, Cityville, Country\",\n        \"guardian\": {\n            \"fatherName\": \"Robert Doe\",\n            \"fatherOccupation\": \"Engineer\",\n            \"fatherContactNo\": \"111-222-3333\",\n            \"motherName\": \"Jane Doe\",\n            \"motherOccupation\": \"Teacher\",\n            \"motherContactNo\": \"444-555-6666\"\n        },\n        \"admissionSemester\": \"668ac94d89af1d995b0de566\",\n        \"academicDepartment\": \"668ac93c89af1d995b0de563\",\n        \"localGuardian\": {\n            \"name\": \"Emily Smith\",\n            \"occupation\": \"Doctor\",\n            \"contactNo\": \"777-888-9999\",\n            \"address\": \"789 Guardian St, Cityville, Country\"\n        },\n        \"profileImg\": \"http://example.com/profiles/johndoe.jpg\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -25,15 +25,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5000/api/v1/users/create-student",
-							"protocol": "http",
+							"raw": "{{university-url}}/users/create-student",
 							"host": [
-								"localhost"
+								"{{university-url}}"
 							],
-							"port": "5000",
 							"path": [
-								"api",
-								"v1",
 								"users",
 								"create-student"
 							]
@@ -105,7 +101,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://localhost:5000/api/v1/academic-semesters/668ac94d89af1d995b0de566",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"academic-semesters",
+								"668ac94d89af1d995b0de566"
+							]
 						}
 					},
 					"response": []
@@ -189,8 +196,22 @@
 				{
 					"name": "deleteStudent Copy",
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/students/2030020001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"students",
+								"2030020001"
+							]
+						}
 					},
 					"response": []
 				},
@@ -214,7 +235,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Faculty of Business\"\n}",
+							"raw": "{\n    \"name\": \"Faculty of Engineering\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -276,7 +297,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Faculty of Testing\"\n}",
+							"raw": "{\n    \"name\": \"Faculty of Business\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -308,7 +329,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\" : \"Department of Computer Science\",\n    \"academicFaculty\": \"6688cb16e342825ccc48a290\"\n}",
+							"raw": "{\n    \"name\" : \"Department of Computer Science\",\n    \"academicFaculty\": \"668ac92289af1d995b0de560\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -346,7 +367,7 @@
 					"response": []
 				},
 				{
-					"name": "get Academic faculty",
+					"name": "get Academic department",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -378,13 +399,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{university-url}}/academic-departments/6688d9ccdb3a50698772e296",
+							"raw": "{{university-url}}/academic-departments/6688d9ccdb3a50698772e297",
 							"host": [
 								"{{university-url}}"
 							],
 							"path": [
 								"academic-departments",
-								"6688d9ccdb3a50698772e296"
+								"6688d9ccdb3a50698772e297"
 							]
 						}
 					},
@@ -394,11 +415,26 @@
 		},
 		{
 			"name": "test route",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": ""
+					"raw": "{{university-url}}",
+					"host": [
+						"{{university-url}}"
+					]
 				}
 			},
 			"response": []

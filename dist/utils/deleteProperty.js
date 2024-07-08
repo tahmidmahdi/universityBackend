@@ -1,2 +1,2 @@
 "use strict";
-const deleteObjectKey = () => { };
+const deleteObjectKey = (payload) => { };

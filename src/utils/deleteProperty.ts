@@ -1,1 +1,1 @@
-const deleteObjectKey = () => {}
+const deleteObjectKey = <T>(payload: T) => {}
