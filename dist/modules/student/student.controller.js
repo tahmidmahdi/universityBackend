@@ -46,14 +46,20 @@ const deleteStudentById = (0, catchAsync_1.default)((req, res, next) => __awaite
         data: result,
     });
 }));
-const updateStudentDataByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { studentId } = req.params;
-    }
-    catch (error) { }
-});
+const updateStudentDataByID = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { studentId } = req.params;
+    const { student } = req.body;
+    const response = yield student_service_1.StudentServices.updateStudentFromDB(studentId, student);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Student data updated successfully',
+        data: response,
+    });
+}));
 exports.StudentControllers = {
     getAllStudents,
     getStudentById,
     deleteStudentById,
+    updateStudentDataByID,
 };

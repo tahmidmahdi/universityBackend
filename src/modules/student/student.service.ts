@@ -2,6 +2,7 @@ import httpStatus from 'http-status'
 import { startSession } from 'mongoose'
 import AppError from '../../errors/AppError'
 import { UserModel } from '../users/user.model'
+import { TStudent } from './student.interface'
 import { Student } from './student.model'
 
 const getAllStudentsFromDB = async () => {
@@ -20,7 +21,7 @@ const getAllStudentsFromDB = async () => {
 
 const getStudentFromDB = async (id: string) => {
   try {
-    const response = Student.findById(id)
+    const response = Student.findOne({ id })
       .populate('user')
       .populate({
         path: 'academicDepartment',
@@ -69,8 +70,38 @@ const deleteStudentFromDB = async (id: string) => {
   }
 }
 
-const updateStudentFromDB = async (id: string) => {
-  const response = await Student.findOneAndUpdate({ id }, { gender: '' })
+const updateStudentFromDB = async (id: string, payload: Partial<TStudent>) => {
+  const { name, guardian, localGuardian, ...remainingStudentData } = payload
+
+  const modifiedUpdatedData: Record<string, unknown> = {
+    ...remainingStudentData,
+  }
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedData[`name.${key}`] = value
+    }
+  }
+
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifiedUpdatedData[`guardian.${key}`] = value
+    }
+  }
+
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifiedUpdatedData[`localGuardian.${key}`] = value
+    }
+  }
+
+  console.log(modifiedUpdatedData)
+
+  const response = await Student.findOneAndUpdate({ id }, modifiedUpdatedData, {
+    new: true,
+    runValidators: true,
+  })
+  return response
 }
 
 export const StudentServices = {

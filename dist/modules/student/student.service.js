@@ -8,6 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -32,7 +43,7 @@ const getAllStudentsFromDB = () => __awaiter(void 0, void 0, void 0, function* (
 });
 const getStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = student_model_1.Student.findById(id)
+        const response = student_model_1.Student.findOne({ id })
             .populate('user')
             .populate({
             path: 'academicDepartment',
@@ -67,8 +78,30 @@ const deleteStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* 
         throw new Error('Failed to delete student');
     }
 });
-const updateStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield student_model_1.Student.findOneAndUpdate({ id }, { gender: '' });
+const updateStudentFromDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, guardian, localGuardian } = payload, remainingStudentData = __rest(payload, ["name", "guardian", "localGuardian"]);
+    const modifiedUpdatedData = Object.assign({}, remainingStudentData);
+    if (name && Object.keys(name).length) {
+        for (const [key, value] of Object.entries(name)) {
+            modifiedUpdatedData[`name.${key}`] = value;
+        }
+    }
+    if (guardian && Object.keys(guardian).length) {
+        for (const [key, value] of Object.entries(guardian)) {
+            modifiedUpdatedData[`guardian.${key}`] = value;
+        }
+    }
+    if (localGuardian && Object.keys(localGuardian).length) {
+        for (const [key, value] of Object.entries(localGuardian)) {
+            modifiedUpdatedData[`localGuardian.${key}`] = value;
+        }
+    }
+    console.log(modifiedUpdatedData);
+    const response = yield student_model_1.Student.findOneAndUpdate({ id }, modifiedUpdatedData, {
+        new: true,
+        runValidators: true,
+    });
+    return response;
 });
 exports.StudentServices = {
     getAllStudentsFromDB,

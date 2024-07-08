@@ -8,6 +8,10 @@ router
   .get('/', StudentControllers.getAllStudents)
   .get('/:studentId', StudentControllers.getStudentById)
   .delete('/:studentId', StudentControllers.deleteStudentById)
-  .put('/:studentId')
+  .patch(
+    '/:studentId',
+
+    StudentControllers.updateStudentDataByID,
+  )
 
 export const StudentRoutes = router

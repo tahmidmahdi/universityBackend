@@ -43,7 +43,52 @@ const createStudentValidationSchema = z.object({
   }),
 })
 
+const updateUserNameValidationSchema = z.object({
+  firstName: z.string().trim().optional(),
+  middleName: z.string().optional(),
+  lastName: z.string().optional(),
+})
+
+const updateGuardianValidationSchema = z.object({
+  fatherName: z.string().min(1).optional(),
+  fatherOccupation: z.string().min(1).optional(),
+  fatherContactNo: z.string().min(1).optional(),
+  motherName: z.string().min(1).optional(),
+  motherOccupation: z.string().min(1).optional(),
+  motherContactNo: z.string().min(1).optional(),
+})
+
+const updateLocalGuardianValidationSchema = z.object({
+  name: z.string().trim().min(1).max(20).optional(),
+  occupation: z.string().min(1).optional(),
+  contactNo: z.string().min(1).optional(),
+  address: z.string().min(1).optional(),
+})
+
+const updateStudentValidationSchema = z.object({
+  body: z.object({
+    student: z.object({
+      name: updateUserNameValidationSchema,
+      gender: z.enum(['male', 'female']).optional(),
+      dateOfBirth: z.string().optional(),
+      email: z.string().email().optional(),
+      contactNo: z.string().min(1).optional(),
+      emergencyContactNo: z.string().min(1).optional(),
+      admissionSemester: z.string().optional(),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+        .optional(),
+      presentAddress: z.string().min(1).optional(),
+      permanentAddress: z.string().min(1).optional(),
+      guardian: updateGuardianValidationSchema,
+      localGuardian: updateLocalGuardianValidationSchema,
+      profileImg: z.string().optional().optional(),
+    }),
+  }),
+})
+
 // Export the Zod schema
 export const studentValidations = {
   createStudentValidationSchema,
+  updateStudentValidationSchema,
 }

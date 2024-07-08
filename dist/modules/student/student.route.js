@@ -12,5 +12,5 @@ router
     .get('/', student_controller_1.StudentControllers.getAllStudents)
     .get('/:studentId', student_controller_1.StudentControllers.getStudentById)
     .delete('/:studentId', student_controller_1.StudentControllers.deleteStudentById)
-    .put('/:studentId');
+    .patch('/:studentId', student_controller_1.StudentControllers.updateStudentDataByID);
 exports.StudentRoutes = router;
