@@ -16,7 +16,15 @@ const getAllStudentsFromDB = async () => {
 
 const getStudentFromDB = async (id: string) => {
   try {
-    const response = Student.aggregate([{ $match: { id: id } }])
+    const response = Student.findById(id)
+      .populate('user')
+      .populate({
+        path: 'academicDepartment',
+        populate: {
+          path: 'academicFaculty',
+          strictPopulate: false,
+        },
+      })
     return response
   } catch (error) {}
 }

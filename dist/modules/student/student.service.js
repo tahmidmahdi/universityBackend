@@ -25,7 +25,15 @@ const getAllStudentsFromDB = () => __awaiter(void 0, void 0, void 0, function* (
 });
 const getStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = student_model_1.Student.aggregate([{ $match: { id: id } }]);
+        const response = student_model_1.Student.findById(id)
+            .populate('user')
+            .populate({
+            path: 'academicDepartment',
+            populate: {
+                path: 'academicFaculty',
+                strictPopulate: false,
+            },
+        });
         return response;
     }
     catch (error) { }
