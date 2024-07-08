@@ -1,4 +1,6 @@
+import httpStatus from 'http-status'
 import { Schema, model } from 'mongoose'
+import AppError from '../../errors/AppError'
 import { IAcademicSemester } from './academicSemester.interface'
 
 const academicSemesterSchema = new Schema<IAcademicSemester>(
@@ -65,7 +67,16 @@ academicSemesterSchema.pre('save', async function (next) {
     year: this.year,
   })
   if (isSemesterExist) {
-    throw Error('Academic semester already exist.')
+    throw new AppError(404, 'Academic semester already exist.')
+  }
+  next()
+})
+
+academicSemesterSchema.pre('findOne', async function (next) {
+  const queryId = this.getQuery()._id
+  const isExist = await AcademicSemester.find(queryId)
+  if (!isExist.length) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Wrong Academic semester id')
   }
   next()
 })

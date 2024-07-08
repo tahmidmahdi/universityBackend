@@ -9,7 +9,7 @@ const main = async () => {
     await connect(database_url as string)
 
     app.listen(port, () => {
-      console.log(`Example app listening on port ${port}`)
+      console.log(`Example app listening on port ${port} `)
     })
   } catch (error) {
     app.listen(5002, () => {

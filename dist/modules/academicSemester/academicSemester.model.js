@@ -8,9 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AcademicSemester = void 0;
+const http_status_1 = __importDefault(require("http-status"));
 const mongoose_1 = require("mongoose");
+const AppError_1 = __importDefault(require("../../errors/AppError"));
 const academicSemesterSchema = new mongoose_1.Schema({
     name: {
         type: String,
@@ -72,7 +77,17 @@ academicSemesterSchema.pre('save', function (next) {
             year: this.year,
         });
         if (isSemesterExist) {
-            throw Error('Academic semester already exist.');
+            throw new AppError_1.default(404, 'Academic semester already exist.');
+        }
+        next();
+    });
+});
+academicSemesterSchema.pre('findOne', function (next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const queryId = this.getQuery()._id;
+        const isExist = yield exports.AcademicSemester.find(queryId);
+        if (!isExist.length) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Wrong Academic semester id');
         }
         next();
     });
