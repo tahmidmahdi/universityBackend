@@ -1,4 +1,7 @@
+import httpStatus from 'http-status'
+import { startSession } from 'mongoose'
 import config from '../../config'
+import AppError from '../../errors/AppError'
 import { IAcademicSemester } from '../academicSemester/academicSemester.interface'
 import { AcademicSemester } from '../academicSemester/academicSemester.model'
 import { TStudent } from '../student/student.interface'
@@ -18,22 +21,39 @@ const createStudentIntoDB = async (payload: TStudent, password?: string) => {
   // if password not given, use default password
   userData.password = password || (config.default_password as string)
 
-  const admissionSemester = await AcademicSemester.findById(
-    payload.admissionSemester,
-  )
+  const admissionSemester = await AcademicSemester.findById({
+    _id: payload.admissionSemester,
+  })
 
-  userData.id = await generateStudentId(admissionSemester as IAcademicSemester)
+  const session = await startSession()
 
-  const response = await UserModel.create(userData)
-  if (Object.keys(response).length) {
+  try {
+    session.startTransaction()
+    userData.id = await generateStudentId(
+      admissionSemester as IAcademicSemester,
+    )
+    // create a user: transaction -1
+    const response = await UserModel.create([userData], { session })
+    if (!response.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user')
+    }
     // set id and _id as user
-    payload.id = response.id
-    payload.user = response._id
+    payload.id = response[0].id
+    payload.user = response[0]._id
 
-    const newStudent = Student.create(payload)
+    // create a student: transaction -2
+    const newStudent = await Student.create([payload], { session })
+    if (!newStudent.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student')
+    }
+
+    await session.commitTransaction()
+    await session.endSession()
     return newStudent
+  } catch (error) {
+    await session.abortTransaction()
+    await session.endSession()
   }
-  return response
 }
 
 export const UserServices = {

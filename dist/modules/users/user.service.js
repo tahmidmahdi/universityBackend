@@ -13,7 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserServices = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const mongoose_1 = require("mongoose");
 const config_1 = __importDefault(require("../../config"));
+const AppError_1 = __importDefault(require("../../errors/AppError"));
 const academicSemester_model_1 = require("../academicSemester/academicSemester.model");
 const student_model_1 = require("../student/student.model");
 const user_model_1 = require("./user.model");
@@ -27,17 +30,34 @@ const createStudentIntoDB = (payload, password) => __awaiter(void 0, void 0, voi
     // year semesterCode 4digitNumber
     // if password not given, use default password
     userData.password = password || config_1.default.default_password;
-    const admissionSemester = yield academicSemester_model_1.AcademicSemester.findById(payload.admissionSemester);
-    userData.id = yield (0, user_utils_1.generateStudentId)(admissionSemester);
-    const response = yield user_model_1.UserModel.create(userData);
-    if (Object.keys(response).length) {
+    const admissionSemester = yield academicSemester_model_1.AcademicSemester.findById({
+        _id: payload.admissionSemester,
+    });
+    const session = yield (0, mongoose_1.startSession)();
+    try {
+        session.startTransaction();
+        userData.id = yield (0, user_utils_1.generateStudentId)(admissionSemester);
+        // create a user: transaction -1
+        const response = yield user_model_1.UserModel.create([userData], { session });
+        if (!response.length) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create user');
+        }
         // set id and _id as user
-        payload.id = response.id;
-        payload.user = response._id;
-        const newStudent = student_model_1.Student.create(payload);
+        payload.id = response[0].id;
+        payload.user = response[0]._id;
+        // create a student: transaction -2
+        const newStudent = yield student_model_1.Student.create([payload], { session });
+        if (!newStudent.length) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create student');
+        }
+        yield session.commitTransaction();
+        yield session.endSession();
         return newStudent;
     }
-    return response;
+    catch (error) {
+        yield session.abortTransaction();
+        yield session.endSession();
+    }
 });
 exports.UserServices = {
     createStudentIntoDB,
