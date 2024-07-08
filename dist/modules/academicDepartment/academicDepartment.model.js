@@ -20,7 +20,7 @@ const academicDepartmentSchema = new mongoose_1.Schema({
     academicFaculty: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: true,
-        ref: 'academicFaculty',
+        ref: 'AcademicFaculty',
     },
 }, {
     timestamps: true,
@@ -46,4 +46,4 @@ academicDepartmentSchema.pre('findOneAndUpdate', function (next) {
         next();
     });
 });
-exports.AcademicDepartment = (0, mongoose_1.model)('academicDepartment', academicDepartmentSchema);
+exports.AcademicDepartment = (0, mongoose_1.model)('AcademicDepartment', academicDepartmentSchema);

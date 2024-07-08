@@ -12,7 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StudentServices = void 0;
 const student_model_1 = require("./student.model");
 const getAllStudentsFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield student_model_1.Student.find().populate('user');
+    const response = yield student_model_1.Student.find()
+        .populate('user')
+        .populate({
+        path: 'academicDepartment',
+        populate: {
+            path: 'academicFaculty',
+            strictPopulate: false,
+        },
+    });
     return response;
 });
 const getStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {

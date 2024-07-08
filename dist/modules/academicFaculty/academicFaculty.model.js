@@ -11,4 +11,4 @@ const academicFacultySchema = new mongoose_1.Schema({
 }, {
     timestamps: true,
 });
-exports.AcademicFaculty = (0, mongoose_1.model)('academicFaculty', academicFacultySchema);
+exports.AcademicFaculty = (0, mongoose_1.model)('AcademicFaculty', academicFacultySchema);

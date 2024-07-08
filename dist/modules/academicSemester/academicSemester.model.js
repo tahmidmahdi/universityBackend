@@ -77,4 +77,4 @@ academicSemesterSchema.pre('save', function (next) {
         next();
     });
 });
-exports.AcademicSemester = (0, mongoose_1.model)('academicSemester', academicSemesterSchema);
+exports.AcademicSemester = (0, mongoose_1.model)('AcademicSemester', academicSemesterSchema);
