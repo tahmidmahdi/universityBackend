@@ -5,12 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = require("zod");
 const config_1 = __importDefault(require("../config"));
+const AppError_1 = __importDefault(require("../errors/AppError"));
 const handleCastError_1 = __importDefault(require("../errors/handleCastError"));
 const handleDuplicateError_1 = __importDefault(require("../errors/handleDuplicateError"));
 const handleValidationError_1 = __importDefault(require("../errors/handleValidationError"));
 const handleZodError_1 = __importDefault(require("../errors/handleZodError"));
 const globalErrorHandler = (error, req, res, next) => {
-    let statusCode = error.statusCode || 500;
+    let statusCode = 500;
     let message = 'Something went wrong!';
     let errorSources = [
         {
@@ -45,6 +46,25 @@ const globalErrorHandler = (error, req, res, next) => {
         message = simplifiedError.message;
         errorSources =
             simplifiedError.errorSources;
+    }
+    else if (error instanceof AppError_1.default) {
+        statusCode = error.statusCode;
+        message: error.message;
+        errorSources: [
+            {
+                path: '',
+                message: error.message,
+            },
+        ];
+    }
+    else if (error instanceof Error) {
+        message: error.message;
+        errorSources: [
+            {
+                path: '',
+                message: error.message,
+            },
+        ];
     }
     return res.status(statusCode).json({
         success: false,
