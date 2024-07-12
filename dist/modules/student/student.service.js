@@ -30,15 +30,23 @@ const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_model_1 = require("../users/user.model");
 const student_model_1 = require("./student.model");
 const getAllStudentsFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const studentSearchableFields = ['email', 'name.firstName', 'presentAddress'];
     let searchTerm = '';
     if (query.searchTerm) {
         searchTerm = query === null || query === void 0 ? void 0 : query.searchTerm;
     }
-    const response = yield student_model_1.Student.find({
-        $or: ['email', 'name.firstName', 'presentAddress'].map(field => ({
+    const queryObject = Object.assign({}, query);
+    const searchQuery = student_model_1.Student.find({
+        $or: studentSearchableFields.map(field => ({
             [field]: { $regex: searchTerm, $options: 'i' },
         })),
-    })
+    });
+    // filtering
+    const excludeFields = ['searchTerm', 'sort', 'limit'];
+    excludeFields.forEach(element => delete queryObject[element]);
+    console.log({ query, queryObject });
+    const filterQuery = searchQuery
+        .find(queryObject)
         .populate('user')
         .populate({
         path: 'academicDepartment',
@@ -47,7 +55,17 @@ const getAllStudentsFromDB = (query) => __awaiter(void 0, void 0, void 0, functi
             strictPopulate: false,
         },
     });
-    return response;
+    let sort = '-createdAt';
+    if (query.sort) {
+        sort = query.sort;
+    }
+    const sortQuery = filterQuery.sort(sort);
+    let limit = 1;
+    if (query.limit) {
+        limit = Number(query.limit);
+    }
+    const limitQuery = yield sortQuery.limit(limit);
+    return limitQuery;
 });
 const getStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
