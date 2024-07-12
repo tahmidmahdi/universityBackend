@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = require("zod");
 const config_1 = __importDefault(require("../config"));
+const handleValidationError_1 = __importDefault(require("../errors/handleValidationError"));
 const handleZodError_1 = __importDefault(require("../errors/handleZodError"));
 const globalErrorHandler = (error, req, res, next) => {
     let statusCode = error.statusCode || 500;
@@ -21,6 +22,13 @@ const globalErrorHandler = (error, req, res, next) => {
         message = simplifiedError.message;
         errorSources =
             simplifiedError.errorSourceMapper;
+    }
+    else if (error.name === 'ValidationError') {
+        const simplifiedError = (0, handleValidationError_1.default)(error);
+        statusCode = simplifiedError.statusCode;
+        message = simplifiedError.message;
+        errorSources =
+            simplifiedError.errorSources;
     }
     return res.status(statusCode).json({
         success: false,

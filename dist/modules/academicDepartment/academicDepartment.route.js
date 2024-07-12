@@ -10,7 +10,11 @@ const academicDepartment_controller_1 = require("./academicDepartment.controller
 const academicDepartment_validation_1 = require("./academicDepartment.validation");
 const router = express_1.default.Router();
 router
-    .post('/create-academic-department', (0, validateRequest_1.default)(academicDepartment_validation_1.AcademicDepartmentValidation.academicDepartmentValidationSchema), academicDepartment_controller_1.AcademicDepartmentControllers.createAcademicDepartment)
+    .post('/create-academic-department', 
+// validateRequest(
+//   AcademicDepartmentValidation.academicDepartmentValidationSchema,
+// ),
+academicDepartment_controller_1.AcademicDepartmentControllers.createAcademicDepartment)
     .get('/:departmentId', academicDepartment_controller_1.AcademicDepartmentControllers.getAcademicDepartment)
     .get('/', academicDepartment_controller_1.AcademicDepartmentControllers.getAllAcademicDepartment)
     .patch('/:departmentId', (0, validateRequest_1.default)(academicDepartment_validation_1.AcademicDepartmentValidation.updateDepartmentValidationSchema), academicDepartment_controller_1.AcademicDepartmentControllers.updateAcademicDepartment);
