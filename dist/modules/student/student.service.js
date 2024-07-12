@@ -29,8 +29,16 @@ const mongoose_1 = require("mongoose");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_model_1 = require("../users/user.model");
 const student_model_1 = require("./student.model");
-const getAllStudentsFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield student_model_1.Student.find()
+const getAllStudentsFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    let searchTerm = '';
+    if (query.searchTerm) {
+        searchTerm = query === null || query === void 0 ? void 0 : query.searchTerm;
+    }
+    const response = yield student_model_1.Student.find({
+        $or: ['email', 'name.firstName', 'presentAddress'].map(field => ({
+            [field]: { $regex: searchTerm, $options: 'i' },
+        })),
+    })
         .populate('user')
         .populate({
         path: 'academicDepartment',
