@@ -1,8 +1,8 @@
 import { ZodError, ZodIssue } from 'zod'
-import { IErrorSource } from '../interface/error'
+import { IErrorSource, IGenericError } from '../interface/error'
 
-const handleZodError = (err: ZodError) => {
-  const errorSourceMapper: Array<IErrorSource> = err?.issues?.map(
+const handleZodError = (err: ZodError): IGenericError => {
+  const errorSources: Array<IErrorSource> = err?.issues?.map(
     (issue: ZodIssue) => {
       return {
         path: issue.path[issue.path.length - 1],
@@ -14,7 +14,7 @@ const handleZodError = (err: ZodError) => {
   return {
     statusCode,
     message: 'Validation error',
-    errorSourceMapper,
+    errorSources,
   }
 }
 
