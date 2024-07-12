@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const zod_1 = require("zod");
 const config_1 = __importDefault(require("../config"));
+const handleZodError_1 = __importDefault(require("../errors/handleZodError"));
 const globalErrorHandler = (error, req, res, next) => {
-    var _a;
     let statusCode = error.statusCode || 500;
     let message = 'Something went wrong!';
     let errorSources = [
@@ -15,22 +15,8 @@ const globalErrorHandler = (error, req, res, next) => {
             message: 'Something went wrong!',
         },
     ];
-    const errorSourceMapper = (_a = error === null || error === void 0 ? void 0 : error.issues) === null || _a === void 0 ? void 0 : _a.map((issue) => {
-        return {
-            path: issue.path[issue.path.length - 1],
-            message: issue.message,
-        };
-    });
-    const handleZodError = (err) => {
-        statusCode = 400;
-        return {
-            statusCode,
-            message: 'Validation error',
-            errorSourceMapper,
-        };
-    };
     if (error instanceof zod_1.ZodError) {
-        const simplifiedError = handleZodError(error);
+        const simplifiedError = (0, handleZodError_1.default)(error);
         statusCode = simplifiedError.statusCode;
         message = simplifiedError.message;
         errorSources =
