@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"password\": \"\",\n    \"student\": {\n        \"name\": {\n            \"firstName\": \"Mahdi\",\n            \"middleName\": \"AAA\",\n            \"lastName\": \"DDD\"\n        },\n        \"gender\": \"male\",\n        \"dateOfBirth\": \"2000-01-01\",\n        \"email\": \"meTransaction-2@gmail.com\",\n        \"contactNo\": \"12\",\n        \"emergencyContactNo\": \"098-765-4321\",\n        \"bloodGroup\": \"O+\",\n        \"presentAddress\": \"123 Main St, Cityville, Country\",\n        \"permanentAddress\": \"456 Another St, Cityville, Country\",\n        \"guardian\": {\n            \"fatherName\": \"Robert Doe\",\n            \"fatherOccupation\": \"Engineer\",\n            \"fatherContactNo\": \"111-222-3333\",\n            \"motherName\": \"Jane Doe\",\n            \"motherOccupation\": \"Teacher\",\n            \"motherContactNo\": \"444-555-6666\"\n        },\n        \"admissionSemester\": \"668ac94d89af1d995b0de566\",\n        \"academicDepartment\": \"668ac93c89af1d995b0de563\",\n        \"localGuardian\": {\n            \"name\": \"Emily Smith\",\n            \"occupation\": \"Doctor\",\n            \"contactNo\": \"777-888-9999\",\n            \"address\": \"789 Guardian St, Cityville, Country\"\n        },\n        \"profileImg\": \"http://example.com/profiles/johndoe.jpg\"\n    }\n}",
+							"raw": "{\n    \"password\": \"\",\n    \"student\": {\n        \"name\": {\n            \"firstName\": \"Mahdi\",\n            \"middleName\": \"AAA\",\n            \"lastName\": \"DDD\"\n        },\n        \"gender\": \"male\",\n        \"dateOfBirth\": \"2000-01-01\",\n        \"email\": \"meTransaction-52@gmail.com\",\n        \"contactNo\": \"12\",\n        \"emergencyContactNo\": \"098-765-4321\",\n        \"bloodGroup\": \"O+\",\n        \"presentAddress\": \"123 Main St, Cityville, Country\",\n        \"permanentAddress\": \"456 Another St, Cityville, Country\",\n        \"guardian\": {\n            \"fatherName\": \"Robert Doe\",\n            \"fatherOccupation\": \"Engineer\",\n            \"fatherContactNo\": \"111-222-3333\",\n            \"motherName\": \"Jane Doe\",\n            \"motherOccupation\": \"Teacher\",\n            \"motherContactNo\": \"444-555-6666\"\n        },\n        \"admissionSemester\": \"668ac94d89af1d995b0de566\",\n        \"academicDepartment\": \"668ac93c89af1d995b0de563\",\n        \"localGuardian\": {\n            \"name\": \"Emily Smith\",\n            \"occupation\": \"Doctor\",\n            \"contactNo\": \"777-888-9999\",\n            \"address\": \"789 Guardian St, Cityville, Country\"\n        },\n        \"profileImg\": \"http://example.com/profiles/johndoe.jpg\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -178,16 +178,30 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5000/api/v1/students",
-							"protocol": "http",
+							"raw": "{{university-url}}/students?searchTerm=tahmid&email=meSummer@gmail.com&sort=-email&limit=2",
 							"host": [
-								"localhost"
+								"{{university-url}}"
 							],
-							"port": "5000",
 							"path": [
-								"api",
-								"v1",
 								"students"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "tahmid"
+								},
+								{
+									"key": "email",
+									"value": "meSummer@gmail.com"
+								},
+								{
+									"key": "sort",
+									"value": "-email"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -219,7 +233,48 @@
 					"name": "findStudent Copy",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/v1/students/2030020001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"v1",
+								"students",
+								"2030020001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update student",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student\":{\n        \"name\": {\n            \"firstName\": \"Tahmid\"\n        },\n        \"guardian\": {\n            \"fatherName\": \"ZZZ\"\n        },\n        \"contactNo\": \"123456\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{university-url}}/students/2030020001",
+							"host": [
+								"{{university-url}}"
+							],
+							"path": [
+								"students",
+								"2030020001"
+							]
+						}
 					},
 					"response": []
 				}
@@ -329,7 +384,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\" : \"Department of Computer Science\",\n    \"academicFaculty\": \"668ac92289af1d995b0de560\"\n}",
+							"raw": "{\n    \"name\": \"Department of Computer Science\",\n    \"academicFaculty\": \"668ac92289af1d995b0de560\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -431,9 +486,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{university-url}}",
+					"raw": "http://localhost:5000/",
+					"protocol": "http",
 					"host": [
-						"{{university-url}}"
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						""
 					]
 				}
 			},
