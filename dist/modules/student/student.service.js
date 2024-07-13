@@ -26,62 +26,72 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StudentServices = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const mongoose_1 = require("mongoose");
+const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_model_1 = require("../users/user.model");
+const student_constant_1 = require("./student.constant");
 const student_model_1 = require("./student.model");
 const getAllStudentsFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const studentSearchableFields = ['email', 'name.firstName', 'presentAddress'];
-    let searchTerm = '';
-    if (query.searchTerm) {
-        searchTerm = query === null || query === void 0 ? void 0 : query.searchTerm;
-    }
-    const queryObject = Object.assign({}, query);
-    const searchQuery = student_model_1.Student.find({
-        $or: studentSearchableFields.map(field => ({
-            [field]: { $regex: searchTerm, $options: 'i' },
-        })),
-    });
+    // const studentSearchableFields = ['email', 'name.firstName', 'presentAddress']
+    // let searchTerm = ''
+    // if (query.searchTerm) {
+    //   searchTerm = query?.searchTerm as string
+    // }
+    // const queryObject = { ...query }
+    // const searchQuery = Student.find({
+    //   $or: studentSearchableFields.map(field => ({
+    //     [field]: { $regex: searchTerm, $options: 'i' },
+    //   })),
+    // })
     // filtering
-    const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
-    excludeFields.forEach(element => delete queryObject[element]);
-    console.log({ query, queryObject });
-    const filterQuery = searchQuery
-        .find(queryObject)
-        .populate('user')
-        .populate({
-        path: 'academicDepartment',
-        populate: {
-            path: 'academicFaculty',
-            strictPopulate: false,
-        },
-    });
-    let sort = '-createdAt';
-    if (query.sort) {
-        sort = query.sort;
-    }
-    const sortQuery = filterQuery.sort(sort);
-    let page = 1;
-    let limit = 1;
-    let skip = 0;
-    if (query.limit) {
-        limit = Number(query.limit);
-    }
-    if (query.page) {
-        page = Number(query.page);
-        skip = (page - 1) * limit;
-    }
-    const paginateQuery = sortQuery.skip(skip);
-    const limitQuery = paginateQuery.limit(limit);
+    // const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields']
+    // excludeFields.forEach(element => delete queryObject[element])
+    // console.log({ query, queryObject })
+    // const filterQuery = searchQuery
+    //   .find(queryObject)
+    //   .populate('user')
+    //   .populate({
+    //     path: 'academicDepartment',
+    //     populate: {
+    //       path: 'academicFaculty',
+    //       strictPopulate: false,
+    //     },
+    //   })
+    // let sort = '-createdAt'
+    // if (query.sort) {
+    //   sort = query.sort as string
+    // }
+    // const sortQuery = filterQuery.sort(sort)
+    // let page = 1
+    // let limit = 1
+    // let skip = 0
+    // if (query.limit) {
+    //   limit = Number(query.limit)
+    // }
+    // if (query.page) {
+    //   page = Number(query.page)
+    //   skip = (page - 1) * limit
+    // }
+    // const paginateQuery: any = sortQuery.skip(skip)
+    // const limitQuery = paginateQuery.limit(limit)
     // field limiting
-    let fields = '-__v';
+    // let fields = '-__v'
     // fields: "name,email"
     // to
     // fields: "name email"
-    if (query.fields) {
-        fields = query.fields.split(',').join(' ');
-    }
-    const fieldQuery = yield limitQuery.select(fields);
-    return fieldQuery;
+    // if (query.fields) {
+    //   fields = (query.fields as string).split(',').join(' ')
+    // }
+    // const fieldQuery = await limitQuery.select(fields)
+    // return fieldQuery
+    const studentQuery = new QueryBuilder_1.default(student_model_1.Student.find(), query)
+        .search(student_constant_1.studentSearchableFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    const response = yield studentQuery.modelQuery;
+    return response;
 });
 const getStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     try {
