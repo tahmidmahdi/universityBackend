@@ -12,26 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserControllers = void 0;
+exports.FacultyControllers = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
-const user_service_1 = require("./user.service");
-const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { password, student } = req.body;
-    const response = yield user_service_1.UserServices.createStudentIntoDB(student, password);
+const faculties_service_1 = require("./faculties.service");
+const getAllFaculties = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield faculties_service_1.FacultyServices.getAllFacultiesFromDB();
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Student is created successfully!',
+        message: 'Faculty retrieved successfully',
         data: response,
     });
 }));
-const createFaculty = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { password, faculty } = req.body;
-    const response = yield user_service_1.UserServices.createFacultyIntoDB(faculty, password);
-}));
-exports.UserControllers = {
-    createStudent,
-    createFaculty,
+exports.FacultyControllers = {
+    getAllFaculties,
 };

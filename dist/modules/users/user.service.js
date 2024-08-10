@@ -60,6 +60,16 @@ const createStudentIntoDB = (payload, password) => __awaiter(void 0, void 0, voi
         throw new Error('Failed to create student');
     }
 });
+const createFacultyIntoDB = (payload, password) => __awaiter(void 0, void 0, void 0, function* () {
+    const facultyData = {
+        role: 'faculty',
+        id: '',
+    };
+    facultyData.password = password || config_1.default.default_password;
+    const lastFaculty = yield (0, user_utils_1.generateFacultyId)();
+    console.log(facultyData, lastFaculty);
+});
 exports.UserServices = {
     createStudentIntoDB,
+    createFacultyIntoDB,
 };

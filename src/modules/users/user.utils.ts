@@ -36,3 +36,10 @@ export const generateStudentId = async (
   incrementId = `${payload.year}${payload.code}${incrementId}`
   return incrementId
 }
+
+export const generateFacultyId = async () => {
+  const lastFaculty = await UserModel.findOne({
+    role: 'faculty',
+  }).sort({ createdAt: -1 })
+  return lastFaculty
+}

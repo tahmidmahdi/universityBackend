@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateStudentId = void 0;
+exports.generateFacultyId = exports.generateStudentId = void 0;
 const user_model_1 = require("./user.model");
 const findLastStudentId = () => __awaiter(void 0, void 0, void 0, function* () {
     const lastStudent = yield user_model_1.UserModel.findOne({
@@ -39,3 +39,10 @@ const generateStudentId = (payload) => __awaiter(void 0, void 0, void 0, functio
     return incrementId;
 });
 exports.generateStudentId = generateStudentId;
+const generateFacultyId = () => __awaiter(void 0, void 0, void 0, function* () {
+    const lastFaculty = yield user_model_1.UserModel.findOne({
+        role: 'faculty',
+    }).sort({ createdAt: -1 });
+    return lastFaculty;
+});
+exports.generateFacultyId = generateFacultyId;

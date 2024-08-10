@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import httpStatus from 'http-status'
 import catchAsync from '../../utils/catchAsync'
 import sendResponse from '../../utils/sendResponse'
@@ -16,6 +16,14 @@ const createStudent = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const createFaculty = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { password, faculty } = req.body
+    const response = await UserServices.createFacultyIntoDB(faculty, password)
+  },
+)
+
 export const UserControllers = {
   createStudent,
+  createFaculty,
 }

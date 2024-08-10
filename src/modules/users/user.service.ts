@@ -4,11 +4,12 @@ import config from '../../config'
 import AppError from '../../errors/AppError'
 import { IAcademicSemester } from '../academicSemester/academicSemester.interface'
 import { AcademicSemester } from '../academicSemester/academicSemester.model'
+import { IFaculty } from '../faculties/faculties.interface'
 import { TStudent } from '../student/student.interface'
 import { Student } from '../student/student.model'
 import { IUser } from './user.interface'
 import { UserModel } from './user.model'
-import { generateStudentId } from './user.utils'
+import { generateFacultyId, generateStudentId } from './user.utils'
 
 const createStudentIntoDB = async (payload: TStudent, password?: string) => {
   // create role
@@ -57,6 +58,17 @@ const createStudentIntoDB = async (payload: TStudent, password?: string) => {
   }
 }
 
+const createFacultyIntoDB = async (payload: IFaculty, password?: string) => {
+  const facultyData: Partial<IUser> = {
+    role: 'faculty',
+    id: '',
+  }
+  facultyData.password = password || (config.default_password as string)
+  const lastFaculty = await generateFacultyId()
+  console.log(facultyData, lastFaculty)
+}
+
 export const UserServices = {
   createStudentIntoDB,
+  createFacultyIntoDB,
 }
