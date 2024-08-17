@@ -18,6 +18,7 @@ const mongoose_1 = require("mongoose");
 const config_1 = __importDefault(require("../../config"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const academicSemester_model_1 = require("../academicSemester/academicSemester.model");
+const faculties_model_1 = require("../faculties/faculties.model");
 const student_model_1 = require("../student/student.model");
 const user_model_1 = require("./user.model");
 const user_utils_1 = require("./user.utils");
@@ -67,7 +68,29 @@ const createFacultyIntoDB = (payload, password) => __awaiter(void 0, void 0, voi
     };
     facultyData.password = password || config_1.default.default_password;
     const lastFaculty = yield (0, user_utils_1.generateFacultyId)();
-    console.log(facultyData, lastFaculty);
+    facultyData.id = lastFaculty;
+    const session = yield (0, mongoose_1.startSession)();
+    try {
+        session.startTransaction();
+        const response = yield user_model_1.UserModel.create([facultyData], { session });
+        if (!response.length) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create user');
+        }
+        payload.id = response[0].id;
+        payload.user = response[0]._id;
+        const createNewFaculty = yield faculties_model_1.Faculty.create([payload], { session });
+        if (!createNewFaculty.length) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create faculty');
+        }
+        yield session.commitTransaction();
+        yield session.endSession();
+        return createNewFaculty;
+    }
+    catch (error) {
+        yield session.abortTransaction();
+        yield session.endSession();
+        throw new Error('Failed to create faculty');
+    }
 });
 exports.UserServices = {
     createStudentIntoDB,

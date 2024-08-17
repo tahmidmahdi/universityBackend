@@ -111,7 +111,9 @@ const getStudentFromDB = async (id: string) => {
         },
       })
     return response
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const deleteStudentFromDB = async (id: string) => {
@@ -174,8 +176,6 @@ const updateStudentFromDB = async (id: string, payload: Partial<TStudent>) => {
       modifiedUpdatedData[`localGuardian.${key}`] = value
     }
   }
-
-  console.log(modifiedUpdatedData)
 
   const response = await Student.findOneAndUpdate({ id }, modifiedUpdatedData, {
     new: true,

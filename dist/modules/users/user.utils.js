@@ -42,7 +42,17 @@ exports.generateStudentId = generateStudentId;
 const generateFacultyId = () => __awaiter(void 0, void 0, void 0, function* () {
     const lastFaculty = yield user_model_1.UserModel.findOne({
         role: 'faculty',
-    }).sort({ createdAt: -1 });
-    return lastFaculty;
+    })
+        .sort({ createdAt: -1 })
+        .select({ id: 1 });
+    if (!lastFaculty) {
+        const facultyInitializedId = '0001';
+        return facultyInitializedId;
+    }
+    const currentIdInNumber = Number(lastFaculty.id);
+    const withFiller = Number(currentIdInNumber + 1)
+        .toString()
+        .padStart(4, '0');
+    return withFiller;
 });
 exports.generateFacultyId = generateFacultyId;

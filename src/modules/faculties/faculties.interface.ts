@@ -19,7 +19,7 @@ export interface IFaculty {
   emergencyContactNo: string
   presentAddress: string
   permanentAddress: string
-  profileImage: string
+  profileImg: string
   academicDepartment: Types.ObjectId
   isDeleted?: boolean
 }

@@ -67,7 +67,7 @@ const facultySchema = new Schema<IFaculty>(
       type: String,
       required: true,
     },
-    profileImage: {
+    profileImg: {
       type: String,
       required: true,
     },

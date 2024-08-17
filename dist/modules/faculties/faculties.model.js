@@ -66,7 +66,7 @@ const facultySchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
-    profileImage: {
+    profileImg: {
         type: String,
         required: true,
     },

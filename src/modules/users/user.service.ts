@@ -5,6 +5,7 @@ import AppError from '../../errors/AppError'
 import { IAcademicSemester } from '../academicSemester/academicSemester.interface'
 import { AcademicSemester } from '../academicSemester/academicSemester.model'
 import { IFaculty } from '../faculties/faculties.interface'
+import { Faculty } from '../faculties/faculties.model'
 import { TStudent } from '../student/student.interface'
 import { Student } from '../student/student.model'
 import { IUser } from './user.interface'
@@ -65,7 +66,29 @@ const createFacultyIntoDB = async (payload: IFaculty, password?: string) => {
   }
   facultyData.password = password || (config.default_password as string)
   const lastFaculty = await generateFacultyId()
-  console.log(facultyData, lastFaculty)
+  facultyData.id = lastFaculty
+  const session = await startSession()
+  try {
+    session.startTransaction()
+    const response = await UserModel.create([facultyData], { session })
+    if (!response.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user')
+    }
+    payload.id = response[0].id
+    payload.user = response[0]._id
+
+    const createNewFaculty = await Faculty.create([payload], { session })
+    if (!createNewFaculty.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create faculty')
+    }
+    await session.commitTransaction()
+    await session.endSession()
+    return createNewFaculty
+  } catch (error) {
+    await session.abortTransaction()
+    await session.endSession()
+    throw new Error('Failed to create faculty')
+  }
 }
 
 export const UserServices = {

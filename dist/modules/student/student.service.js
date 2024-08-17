@@ -114,7 +114,9 @@ const getStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () 
         });
         return response;
     }
-    catch (error) { }
+    catch (error) {
+        console.log(error);
+    }
 });
 const deleteStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const session = yield (0, mongoose_1.startSession)();
@@ -156,7 +158,6 @@ const updateStudentFromDB = (id, payload) => __awaiter(void 0, void 0, void 0, f
             modifiedUpdatedData[`localGuardian.${key}`] = value;
         }
     }
-    console.log(modifiedUpdatedData);
     const response = yield student_model_1.Student.findOneAndUpdate({ id }, modifiedUpdatedData, {
         new: true,
         runValidators: true,
