@@ -23,14 +23,6 @@ const createFacultyValidationSchema = zod_1.z.object({
         faculty: zod_1.z.object({
             name: facultyNameValidationSchema,
             gender: zod_1.z.enum(['male', 'female']),
-            role: zod_1.z.string({
-                invalid_type_error: 'Role must be string',
-                required_error: 'Role is required',
-            }),
-            designation: zod_1.z.string({
-                invalid_type_error: 'Designation must be string',
-                required_error: 'Designation is required',
-            }),
             dateOfBirth: zod_1.z
                 .string({
                 invalid_type_error: 'Date of birth must be string',
@@ -46,6 +38,7 @@ const createFacultyValidationSchema = zod_1.z.object({
             contactNo: zod_1.z.string().min(11).optional(),
             emergencyContactNo: zod_1.z.string().min(11).optional(),
             presentAddress: zod_1.z.string().optional(),
+            academicDepartment: zod_1.z.string(),
             permanentAddress: zod_1.z.string().optional(),
             profileImg: zod_1.z.string().optional(),
         }),

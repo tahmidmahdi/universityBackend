@@ -5,7 +5,7 @@ import sendResponse from '../../utils/sendResponse'
 import { FacultyServices } from './faculties.service'
 
 const getAllFaculties = catchAsync(async (req: Request, res: Response) => {
-  const response = await FacultyServices.getAllFacultiesFromDB()
+  const response = await FacultyServices.getAllFacultiesFromDB(req.query)
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -37,8 +37,20 @@ const updateFacultyById = catchAsync(async (req: Request, res: Response) => {
   })
 })
 
+const deleteFacultyById = catchAsync(async (req: Request, res: Response) => {
+  const { facultyId } = req.params
+  const response = await FacultyServices.deleteStudentFromDB(facultyId)
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully deleted faculty',
+    data: response,
+  })
+})
+
 export const FacultyControllers = {
   getAllFaculties,
   getFacultyById,
   updateFacultyById,
+  deleteFacultyById,
 }

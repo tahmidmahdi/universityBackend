@@ -29,14 +29,6 @@ const facultySchema = new Schema<IFaculty>(
       unique: true,
       ref: 'User',
     },
-    designation: {
-      type: String,
-      required: true,
-    },
-    role: {
-      type: String,
-      required: true,
-    },
     name: facultyNameSchema,
     gender: {
       type: String,
@@ -84,5 +76,10 @@ const facultySchema = new Schema<IFaculty>(
     timestamps: true,
   },
 )
+
+facultySchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } })
+  next()
+})
 
 export const Faculty = model<IFaculty>('Faculty', facultySchema)

@@ -28,14 +28,6 @@ const facultySchema = new mongoose_1.Schema({
         unique: true,
         ref: 'User',
     },
-    designation: {
-        type: String,
-        required: true,
-    },
-    role: {
-        type: String,
-        required: true,
-    },
     name: facultyNameSchema,
     gender: {
         type: String,
@@ -80,5 +72,9 @@ const facultySchema = new mongoose_1.Schema({
     },
 }, {
     timestamps: true,
+});
+facultySchema.pre('find', function (next) {
+    this.find({ isDeleted: { $ne: true } });
+    next();
 });
 exports.Faculty = (0, mongoose_1.model)('Faculty', facultySchema);

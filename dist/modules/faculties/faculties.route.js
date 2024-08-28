@@ -10,5 +10,6 @@ const router = express_1.default.Router();
 router
     .get('/', faculties_controller_1.FacultyControllers.getAllFaculties)
     .get('/:facultyId', faculties_controller_1.FacultyControllers.getFacultyById)
-    .patch('/:facultyId', faculties_controller_1.FacultyControllers.updateFacultyById);
+    .patch('/:facultyId', faculties_controller_1.FacultyControllers.updateFacultyById)
+    .delete('/:facultyId', faculties_controller_1.FacultyControllers.deleteFacultyById);
 exports.FacultiesRoute = router;

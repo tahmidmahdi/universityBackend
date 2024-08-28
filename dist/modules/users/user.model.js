@@ -48,8 +48,8 @@ const userSchema = new mongoose_1.Schema({
 });
 userSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const user = this;
-        user.password = yield bcrypt_1.default.hash(user.password, Number(config_1.default.bcrypt_salt_rounds));
+        // const user = this
+        this.password = yield bcrypt_1.default.hash(this.password, Number(config_1.default.bcrypt_salt_rounds));
         next();
     });
 });
