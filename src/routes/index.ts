@@ -1,6 +1,7 @@
 import express, { Router } from 'express'
 import { AcademicDepartmentRoutes } from '../modules/academicDepartment/academicDepartment.route'
 import { AcademicSemesterRoutes } from '../modules/academicSemester/academicSemester.route'
+import { AdminRoutes } from '../modules/admin/admin.route'
 import { FacultiesRoute } from '../modules/faculties/faculties.route'
 import { StudentRoutes } from '../modules/student/student.route'
 import { UserRoutes } from '../modules/users/user.route'
@@ -37,6 +38,10 @@ const moduleRoutes: Array<IRoutes> = [
   {
     path: '/faculties',
     route: FacultiesRoute,
+  },
+  {
+    path: '/admins',
+    route: AdminRoutes,
   },
 ]
 
