@@ -37,14 +37,10 @@ const updateAdminIntoDB = async (id: string, payload: Partial<TAdmin>) => {
       modifiedUpdatedData[`name.${key}`] = value
     }
   }
-  const result = await Admin.findByIdAndUpdate(
-    { _id: id },
-    modifiedUpdatedData,
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
+  const result = await Admin.findByIdAndUpdate(id, modifiedUpdatedData, {
+    new: true,
+    runValidators: true,
+  })
   return result
 }
 

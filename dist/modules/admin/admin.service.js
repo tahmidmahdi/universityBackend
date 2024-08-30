@@ -54,7 +54,7 @@ const updateAdminIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, fun
             modifiedUpdatedData[`name.${key}`] = value;
         }
     }
-    const result = yield admin_model_1.Admin.findByIdAndUpdate({ _id: id }, modifiedUpdatedData, {
+    const result = yield admin_model_1.Admin.findByIdAndUpdate(id, modifiedUpdatedData, {
         new: true,
         runValidators: true,
     });
