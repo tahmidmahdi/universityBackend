@@ -16,6 +16,17 @@ const createCourseValidationSchema = zod_1.z.object({
         isDeleted: zod_1.z.boolean().optional(),
     }),
 });
+const updateCourseValidationSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        title: zod_1.z.string().optional(),
+        prefix: zod_1.z.string().optional(),
+        code: zod_1.z.number().optional(),
+        credits: zod_1.z.number().optional(),
+        preRequisiteCourses: zod_1.z.array(preRequisiteCourseValidationSchema).optional(),
+        isDeleted: zod_1.z.boolean().optional(),
+    }),
+});
 exports.courseValidations = {
     createCourseValidationSchema,
+    updateCourseValidationSchema,
 };

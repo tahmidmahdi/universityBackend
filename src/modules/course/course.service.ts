@@ -31,6 +31,20 @@ const getCourseFromDB = async (id: Types.ObjectId) => {
   return response
 }
 
+const updateCourseIntoDB = async (
+  id: Types.ObjectId,
+  payload: Partial<ICourse>,
+) => {
+  const { preRequisiteCourses, ...remaining } = payload
+
+  // basic course info update
+  const updateBasicCourseInfo = await Course.findByIdAndUpdate(id, remaining, {
+    new: true,
+    runValidators: true,
+  })
+  return updateBasicCourseInfo
+}
+
 const deleteCourseFromDB = async (id: Types.ObjectId) => {
   const response = await Course.findByIdAndUpdate(
     id,
@@ -44,5 +58,6 @@ export const CourseServices = {
   createCourseIntoDB,
   getAllCoursesFromDB,
   getCourseFromDB,
+  updateCourseIntoDB,
   deleteCourseFromDB,
 }

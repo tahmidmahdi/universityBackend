@@ -45,6 +45,16 @@ const getCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
         data: response,
     });
 }));
+const updateCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id: courseId } = req.params;
+    const response = yield course_service_1.CourseServices.updateCourseIntoDB(courseId, req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Course updated successfully!',
+        data: response,
+    });
+}));
 const deleteCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id: courseId } = req.params;
     const response = yield course_service_1.CourseServices.deleteCourseFromDB(courseId);
@@ -59,5 +69,6 @@ exports.CourseControllers = {
     createCourse,
     getAllCourses,
     getCourse,
+    updateCourse,
     deleteCourse,
 };

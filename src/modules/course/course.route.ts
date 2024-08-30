@@ -13,6 +13,11 @@ router
   )
   .get('/', CourseControllers.getAllCourses)
   .get('/:id', CourseControllers.getCourse)
+  .patch(
+    '/:id',
+    validateRequest(courseValidations.updateCourseValidationSchema),
+    CourseControllers.updateCourse,
+  )
   .delete('/:id', CourseControllers.deleteCourse)
 
 export const CourseRoutes = router
