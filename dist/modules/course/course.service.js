@@ -54,6 +54,19 @@ const updateCourseIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, fu
         new: true,
         runValidators: true,
     });
+    // check if there is any pre requisite courses
+    if (preRequisiteCourses && preRequisiteCourses.length > 0) {
+        // filter out deleted fields
+        const deletedPreRequisites = preRequisiteCourses
+            .filter(course => course.course && course.isDeleted)
+            .map(course => course.course);
+        const deletedPreRequisiteCourses = yield course_model_1.Course.findByIdAndUpdate(id, {
+            $pull: { preRequisiteCourses: { course: { $in: deletedPreRequisites } } },
+        });
+        // filter out new pre requisites
+        const newPreRequisites = preRequisiteCourses.filter(course => course.isDeleted && !course.isDeleted);
+        console.log({ newPreRequisites });
+    }
     return updateBasicCourseInfo;
 });
 const deleteCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
