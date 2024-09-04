@@ -24,7 +24,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CourseServices = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
+const AppError_1 = __importDefault(require("../../errors/AppError"));
 const _course_constant_1 = require("./ course.constant");
 const course_model_1 = require("./course.model");
 const createCourseIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -46,28 +49,62 @@ const getCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     return response;
 });
 const updateCourseIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const { preRequisiteCourses } = payload, remaining = __rest(payload
-    // basic course info update
-    , ["preRequisiteCourses"]);
-    // basic course info update
-    const updateBasicCourseInfo = yield course_model_1.Course.findByIdAndUpdate(id, remaining, {
-        new: true,
-        runValidators: true,
-    });
-    // check if there is any pre requisite courses
-    if (preRequisiteCourses && preRequisiteCourses.length > 0) {
-        // filter out deleted fields
-        const deletedPreRequisites = preRequisiteCourses
-            .filter(course => course.course && course.isDeleted)
-            .map(course => course.course);
-        const deletedPreRequisiteCourses = yield course_model_1.Course.findByIdAndUpdate(id, {
-            $pull: { preRequisiteCourses: { course: { $in: deletedPreRequisites } } },
+    const { preRequisiteCourses } = payload, remaining = __rest(payload, ["preRequisiteCourses"]);
+    const session = yield mongoose_1.default.startSession();
+    try {
+        session.startTransaction();
+        // basic course info update
+        const updateBasicCourseInfo = yield course_model_1.Course.findByIdAndUpdate(id, remaining, {
+            new: true,
+            runValidators: true,
+            session,
         });
-        // filter out new pre requisites
-        const newPreRequisites = preRequisiteCourses.filter(course => course.isDeleted && !course.isDeleted);
-        console.log({ newPreRequisites });
+        if (!updateBasicCourseInfo) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to update course');
+        }
+        // check if there is any pre requisite courses
+        if (preRequisiteCourses && preRequisiteCourses.length > 0) {
+            // filter out deleted fields
+            const deletedPreRequisites = preRequisiteCourses
+                .filter(course => {
+                if (course.course) {
+                    return course.isDeleted;
+                }
+            })
+                .map(course => course.course);
+            // deleted pre requisite courses
+            const deletedPreRequisiteCourses = yield course_model_1.Course.findByIdAndUpdate(id, {
+                $pull: {
+                    preRequisiteCourses: { course: { $in: deletedPreRequisites } },
+                },
+            }, { new: true, runValidators: true, session });
+            if (!deletedPreRequisiteCourses) {
+                throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to delete course');
+            }
+            // filter out new pre requisites
+            const newPreRequisites = preRequisiteCourses.filter(course => {
+                if (course.course) {
+                    return !course.isDeleted;
+                }
+            });
+            // add new pre requisites
+            const newPreRequisiteCourses = yield course_model_1.Course.findByIdAndUpdate(id, {
+                $addToSet: { preRequisiteCourses: { $each: newPreRequisites } },
+            }, { new: true, runValidators: true, session });
+            if (!newPreRequisiteCourses) {
+                throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to delete course');
+            }
+        }
+        const response = course_model_1.Course.findById(id).populate('preRequisiteCourses.course');
+        yield session.commitTransaction();
+        yield session.endSession();
+        return response;
     }
-    return updateBasicCourseInfo;
+    catch (error) {
+        yield session.abortTransaction();
+        yield session.endSession();
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Something went wrong');
+    }
 });
 const deleteCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield course_model_1.Course.findByIdAndUpdate(id, { isDeleted: true }, { new: true });

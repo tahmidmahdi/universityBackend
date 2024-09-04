@@ -17,5 +17,6 @@
   ],
   "files.trimTrailingWhitespace": true,
   "javascript.preferences.quoteStyle": "single",
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "cSpell.language": "en,en-GB"
 }
