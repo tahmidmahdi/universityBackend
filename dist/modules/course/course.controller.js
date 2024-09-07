@@ -55,6 +55,29 @@ const updateCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: response,
     });
 }));
+const assignFacultiesWithCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id: courseId } = req.params;
+    const { faculties } = req.body;
+    const response = yield course_service_1.CourseServices.assignFacultiesWithCourseIntoDB(courseId, faculties);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Faculties assigned successfully!',
+        data: response,
+    });
+}));
+const removeFacultiesWithCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('in controller');
+    const { id: courseId } = req.params;
+    const { faculties } = req.body;
+    const response = yield course_service_1.CourseServices.removeFacultiesWithCourseIntoDB(courseId, faculties);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Faculties removed successfully!',
+        data: response,
+    });
+}));
 const deleteCourse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id: courseId } = req.params;
     const response = yield course_service_1.CourseServices.deleteCourseFromDB(courseId);
@@ -70,5 +93,7 @@ exports.CourseControllers = {
     getAllCourses,
     getCourse,
     updateCourse,
+    assignFacultiesWithCourse,
+    removeFacultiesWithCourse,
     deleteCourse,
 };

@@ -3,8 +3,8 @@ import mongoose, { Types } from 'mongoose'
 import QueryBuilder from '../../builder/QueryBuilder'
 import AppError from '../../errors/AppError'
 import { courseSearchableFields } from './ course.constant'
-import { ICourse } from './course.interface'
-import { Course } from './course.model'
+import { ICourse, ICourseFaculty } from './course.interface'
+import { Course, CourseFaculty } from './course.model'
 
 const createCourseIntoDB = async (payload: ICourse) => {
   const response = await Course.create(payload)
@@ -114,6 +114,40 @@ const updateCourseIntoDB = async (
   }
 }
 
+const assignFacultiesWithCourseIntoDB = async (
+  id: Types.ObjectId,
+  payload: Partial<ICourseFaculty>,
+) => {
+  const response = await CourseFaculty.findByIdAndUpdate(
+    id,
+    {
+      course: id,
+      $addToSet: { faculties: { $each: payload } },
+    },
+    {
+      upsert: true,
+      new: true,
+    },
+  )
+  return response
+}
+
+const removeFacultiesWithCourseIntoDB = async (
+  id: Types.ObjectId,
+  payload: Partial<ICourseFaculty>,
+) => {
+  const response = await CourseFaculty.findByIdAndUpdate(
+    id,
+    {
+      $pull: { faculties: { $in: payload } },
+    },
+    {
+      new: true,
+    },
+  )
+  return response
+}
+
 const deleteCourseFromDB = async (id: Types.ObjectId) => {
   const response = await Course.findByIdAndUpdate(
     id,
@@ -128,5 +162,7 @@ export const CourseServices = {
   getAllCoursesFromDB,
   getCourseFromDB,
   updateCourseIntoDB,
+  assignFacultiesWithCourseIntoDB,
+  removeFacultiesWithCourseIntoDB,
   deleteCourseFromDB,
 }

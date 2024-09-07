@@ -18,6 +18,16 @@ router
     validateRequest(courseValidations.updateCourseValidationSchema),
     CourseControllers.updateCourse,
   )
+  .put(
+    '/:id/assign-faculties',
+    validateRequest(courseValidations.facultiesWithCourseValidationSchema),
+    CourseControllers.assignFacultiesWithCourse,
+  )
+  .put(
+    '/:id/remove-faculties',
+    validateRequest(courseValidations.facultiesWithCourseValidationSchema),
+    CourseControllers.removeFacultiesWithCourse,
+  )
   .delete('/:id', CourseControllers.deleteCourse)
 
 export const CourseRoutes = router

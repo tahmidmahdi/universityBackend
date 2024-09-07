@@ -106,6 +106,24 @@ const updateCourseIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, fu
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Something went wrong');
     }
 });
+const assignFacultiesWithCourseIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield course_model_1.CourseFaculty.findByIdAndUpdate(id, {
+        course: id,
+        $addToSet: { faculties: { $each: payload } },
+    }, {
+        upsert: true,
+        new: true,
+    });
+    return response;
+});
+const removeFacultiesWithCourseIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield course_model_1.CourseFaculty.findByIdAndUpdate(id, {
+        $pull: { faculties: { $in: payload } },
+    }, {
+        new: true,
+    });
+    return response;
+});
 const deleteCourseFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield course_model_1.Course.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
     return response;
@@ -115,5 +133,7 @@ exports.CourseServices = {
     getAllCoursesFromDB,
     getCourseFromDB,
     updateCourseIntoDB,
+    assignFacultiesWithCourseIntoDB,
+    removeFacultiesWithCourseIntoDB,
     deleteCourseFromDB,
 };

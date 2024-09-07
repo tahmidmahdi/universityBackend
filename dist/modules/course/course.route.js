@@ -14,5 +14,7 @@ router
     .get('/', course_controller_1.CourseControllers.getAllCourses)
     .get('/:id', course_controller_1.CourseControllers.getCourse)
     .patch('/:id', (0, validateRequest_1.default)(course_validation_1.courseValidations.updateCourseValidationSchema), course_controller_1.CourseControllers.updateCourse)
+    .put('/:id/assign-faculties', (0, validateRequest_1.default)(course_validation_1.courseValidations.facultiesWithCourseValidationSchema), course_controller_1.CourseControllers.assignFacultiesWithCourse)
+    .put('/:id/remove-faculties', (0, validateRequest_1.default)(course_validation_1.courseValidations.facultiesWithCourseValidationSchema), course_controller_1.CourseControllers.removeFacultiesWithCourse)
     .delete('/:id', course_controller_1.CourseControllers.deleteCourse);
 exports.CourseRoutes = router;
