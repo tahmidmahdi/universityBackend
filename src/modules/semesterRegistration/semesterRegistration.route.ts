@@ -13,6 +13,7 @@ router
     ),
     SemesterRegistrationController.createSemesterRegistration,
   )
-  .get('/:id')
+  .get('/:id', SemesterRegistrationController.getSingleSemesterRegistration)
+  .get('/', SemesterRegistrationController.getAllSemesterRegistrations)
 
 export const SemesterRegistrationRoutes = router

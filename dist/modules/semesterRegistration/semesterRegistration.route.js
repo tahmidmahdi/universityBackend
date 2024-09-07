@@ -11,5 +11,6 @@ const semesterRegistration_validation_1 = require("./semesterRegistration.valida
 const router = express_1.default.Router();
 router
     .post('/create-semester-registration', (0, validateRequest_1.default)(semesterRegistration_validation_1.SemesterRegistrationValidations.createSemesterRegistrationSchema), semesterRegistration_controller_1.SemesterRegistrationController.createSemesterRegistration)
-    .get('/:id');
+    .get('/:id', semesterRegistration_controller_1.SemesterRegistrationController.getSingleSemesterRegistration)
+    .get('/', semesterRegistration_controller_1.SemesterRegistrationController.getAllSemesterRegistrations);
 exports.SemesterRegistrationRoutes = router;
