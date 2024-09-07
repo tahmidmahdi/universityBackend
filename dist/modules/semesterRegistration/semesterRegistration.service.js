@@ -17,6 +17,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const academicSemester_model_1 = require("../academicSemester/academicSemester.model");
+const semesterRegistration_constant_1 = require("./semesterRegistration.constant");
 const semesterRegistration_model_1 = require("./semesterRegistration.model");
 const createSemesterRegistrationIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const academicSemester = payload.academicSemester;
@@ -24,10 +25,10 @@ const createSemesterRegistrationIntoDB = (payload) => __awaiter(void 0, void 0, 
     const isTheirAnyUpcomingOrOngoing = yield semesterRegistration_model_1.SemesterRegistration.findOne({
         $or: [
             {
-                status: 'UPCOMING',
+                status: semesterRegistration_constant_1.SemesterRegistrationStatusType.UPCOMING,
             },
             {
-                status: 'ONGOING',
+                status: semesterRegistration_constant_1.SemesterRegistrationStatusType.ONGOING,
             },
         ],
     });
@@ -71,10 +72,25 @@ const updateSemesterRegistrationIntoDB = (id, payload) => __awaiter(void 0, void
         throw new AppError_1.default(http_status_1.default.CONFLICT, 'This semester is not found');
     }
     // if the requested semester registration is ended, we will not update anything
-    const requestedSemesterStatus = isSemesterRegistrationExist === null || isSemesterRegistrationExist === void 0 ? void 0 : isSemesterRegistrationExist.status;
-    if (requestedSemesterStatus === 'ENDED') {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, `This semester is already ${requestedSemesterStatus}`);
+    const currentSemesterStatus = isSemesterRegistrationExist === null || isSemesterRegistrationExist === void 0 ? void 0 : isSemesterRegistrationExist.status;
+    const requestedStatus = payload === null || payload === void 0 ? void 0 : payload.status;
+    if (currentSemesterStatus === semesterRegistration_constant_1.SemesterRegistrationStatusType.ENDED) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, `This semester is already ${currentSemesterStatus}`);
     }
+    // UPCOMING -> ONGOING -> ENDED
+    if (currentSemesterStatus === semesterRegistration_constant_1.SemesterRegistrationStatusType.UPCOMING &&
+        requestedStatus === semesterRegistration_constant_1.SemesterRegistrationStatusType.ENDED) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, `You can not directly change status from ${currentSemesterStatus} to ${requestedStatus}`);
+    }
+    if (currentSemesterStatus === semesterRegistration_constant_1.SemesterRegistrationStatusType.ONGOING &&
+        requestedStatus === semesterRegistration_constant_1.SemesterRegistrationStatusType.UPCOMING) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, `You can not directly change status from ${currentSemesterStatus} to ${requestedStatus}`);
+    }
+    const response = yield semesterRegistration_model_1.SemesterRegistration.findByIdAndUpdate(id, payload, {
+        new: true,
+        runValidators: true,
+    });
+    return response;
 });
 exports.SemesterRegistrationsService = {
     createSemesterRegistrationIntoDB,
