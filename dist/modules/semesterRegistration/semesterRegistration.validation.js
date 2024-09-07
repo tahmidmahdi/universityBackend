@@ -13,6 +13,19 @@ const createSemesterRegistrationSchema = zod_1.z.object({
         maxCredit: zod_1.z.number(),
     }),
 });
+const updateSemesterRegistrationSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        academicSemester: zod_1.z.string().optional(),
+        status: zod_1.z
+            .enum([...semesterRegistration_constant_1.SemesterRegistrationStatus])
+            .optional(),
+        startDate: zod_1.z.string().datetime().optional(),
+        endDate: zod_1.z.string().datetime().optional(),
+        minCredit: zod_1.z.number().optional(),
+        maxCredit: zod_1.z.number().optional(),
+    }),
+});
 exports.SemesterRegistrationValidations = {
     createSemesterRegistrationSchema,
+    updateSemesterRegistrationSchema,
 };

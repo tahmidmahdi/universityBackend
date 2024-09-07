@@ -45,8 +45,19 @@ const getSingleSemesterRegistration = (0, catchAsync_1.default)((req, res) => __
         data: response,
     });
 }));
+const updateSemesterRegistration = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const response = yield semesterRegistration_service_1.SemesterRegistrationsService.updateSemesterRegistrationIntoDB(id, req.body);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Updated Academic Semester successfully',
+        data: response,
+    });
+}));
 exports.SemesterRegistrationController = {
     createSemesterRegistration,
     getAllSemesterRegistrations,
     getSingleSemesterRegistration,
+    updateSemesterRegistration,
 };

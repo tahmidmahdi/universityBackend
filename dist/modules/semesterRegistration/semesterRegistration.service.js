@@ -20,6 +20,20 @@ const academicSemester_model_1 = require("../academicSemester/academicSemester.m
 const semesterRegistration_model_1 = require("./semesterRegistration.model");
 const createSemesterRegistrationIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const academicSemester = payload.academicSemester;
+    // check if their any registered semesters status with upcoming or ongoing
+    const isTheirAnyUpcomingOrOngoing = yield semesterRegistration_model_1.SemesterRegistration.findOne({
+        $or: [
+            {
+                status: 'UPCOMING',
+            },
+            {
+                status: 'ONGOING',
+            },
+        ],
+    });
+    if (isTheirAnyUpcomingOrOngoing) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, `Their is already an ${isTheirAnyUpcomingOrOngoing.status} registered semester`);
+    }
     // check if the semester is exist
     const isAcademicSemesterExist = yield academicSemester_model_1.AcademicSemester.findById({
         _id: academicSemester,
@@ -47,10 +61,21 @@ const getAllSemesterRegistrationsFromDB = (query) => __awaiter(void 0, void 0, v
     return response;
 });
 const getSingleSemesterRegistrationFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield semesterRegistration_model_1.SemesterRegistration.findById(id);
+    const response = yield semesterRegistration_model_1.SemesterRegistration.findById(id).populate('academicSemester');
     return response;
 });
-const updateSemesterRegistrationIntoDB = () => __awaiter(void 0, void 0, void 0, function* () { });
+const updateSemesterRegistrationIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    // check is the registered semester is exists
+    const isSemesterRegistrationExist = yield semesterRegistration_model_1.SemesterRegistration.findById(id);
+    if (!isSemesterRegistrationExist) {
+        throw new AppError_1.default(http_status_1.default.CONFLICT, 'This semester is not found');
+    }
+    // if the requested semester registration is ended, we will not update anything
+    const requestedSemesterStatus = isSemesterRegistrationExist === null || isSemesterRegistrationExist === void 0 ? void 0 : isSemesterRegistrationExist.status;
+    if (requestedSemesterStatus === 'ENDED') {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, `This semester is already ${requestedSemesterStatus}`);
+    }
+});
 exports.SemesterRegistrationsService = {
     createSemesterRegistrationIntoDB,
     getAllSemesterRegistrationsFromDB,

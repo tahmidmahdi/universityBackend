@@ -15,5 +15,12 @@ router
   )
   .get('/:id', SemesterRegistrationController.getSingleSemesterRegistration)
   .get('/', SemesterRegistrationController.getAllSemesterRegistrations)
+  .patch(
+    '/:id',
+    validateRequest(
+      SemesterRegistrationValidations.updateSemesterRegistrationSchema,
+    ),
+    SemesterRegistrationController.updateSemesterRegistration,
+  )
 
 export const SemesterRegistrationRoutes = router

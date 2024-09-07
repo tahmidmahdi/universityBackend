@@ -1,16 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const handleCastError = (error) => {
+const handleCastError = (err) => {
     const errorSources = [
         {
-            path: error.path,
-            message: error.message,
+            path: err.path,
+            message: err.message,
         },
     ];
     const statusCode = 400;
     return {
         statusCode,
-        message: 'Invalid Id!',
+        message: 'Invalid ID',
         errorSources,
     };
 };

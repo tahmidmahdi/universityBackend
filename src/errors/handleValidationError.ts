@@ -2,21 +2,22 @@ import mongoose from 'mongoose'
 import { IErrorSource, IGenericError } from '../interface/error'
 
 const handleValidationError = (
-  error: mongoose.Error.ValidationError,
+  err: mongoose.Error.ValidationError,
 ): IGenericError => {
-  const errorSources: Array<IErrorSource> = Object.values(error.errors).map(
-    (value: mongoose.Error.ValidatorError | mongoose.Error.CastError) => {
+  const errorSources: Array<IErrorSource> = Object.values(err.errors).map(
+    (val: mongoose.Error.ValidatorError | mongoose.Error.CastError) => {
       return {
-        path: value.path,
-        message: value.message,
+        path: val?.path,
+        message: val?.message,
       }
     },
   )
 
   const statusCode = 400
+
   return {
     statusCode,
-    message: 'Validation error!',
+    message: 'Validation Error',
     errorSources,
   }
 }
