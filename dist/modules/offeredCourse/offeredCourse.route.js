@@ -9,5 +9,7 @@ const validateRequest_1 = __importDefault(require("../../middlewares/validateReq
 const offeredCourse_controller_1 = require("./offeredCourse.controller");
 const offeredCourse_validation_1 = require("./offeredCourse.validation");
 const router = express_1.default.Router();
-router.post('/create-offered-course', (0, validateRequest_1.default)(offeredCourse_validation_1.OfferedCourseValidations.createOfferedCourseValidationSchema), offeredCourse_controller_1.OfferedCourseController.createOfferedCourse);
+router
+    .post('/create-offered-course', (0, validateRequest_1.default)(offeredCourse_validation_1.OfferedCourseValidations.createOfferedCourseValidationSchema), offeredCourse_controller_1.OfferedCourseController.createOfferedCourse)
+    .get('/', offeredCourse_controller_1.OfferedCourseController.getAllOfferedCourses);
 exports.OfferedCourseRoutes = router;

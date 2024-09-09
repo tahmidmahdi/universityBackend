@@ -5,10 +5,14 @@ import { OfferedCourseValidations } from './offeredCourse.validation'
 
 const router = express.Router()
 
-router.post(
-  '/create-offered-course',
-  validateRequest(OfferedCourseValidations.createOfferedCourseValidationSchema),
-  OfferedCourseController.createOfferedCourse,
-)
+router
+  .post(
+    '/create-offered-course',
+    validateRequest(
+      OfferedCourseValidations.createOfferedCourseValidationSchema,
+    ),
+    OfferedCourseController.createOfferedCourse,
+  )
+  .get('/', OfferedCourseController.getAllOfferedCourses)
 
 export const OfferedCourseRoutes = router

@@ -22,7 +22,7 @@ const faculties_model_1 = require("../faculties/faculties.model");
 const semesterRegistration_model_1 = require("../semesterRegistration/semesterRegistration.model");
 const offeredCourse_model_1 = require("./offeredCourse.model");
 const createOfferedCourseIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const { semesterRegistration, academicFaculty, academicDepartment, course, faculty, section, } = payload;
+    const { semesterRegistration, academicFaculty, academicDepartment, course, faculty, section, days, startTime, endTime, } = payload;
     // check if the semester registration id exist!
     const isSemesterRegistrationExist = yield semesterRegistration_model_1.SemesterRegistration.findById(semesterRegistration);
     if (!isSemesterRegistrationExist) {
@@ -61,15 +61,38 @@ const createOfferedCourseIntoDB = (payload) => __awaiter(void 0, void 0, void 0,
     if (isSameOfferedCourseWithSameRegisteredSemesterWithSameSection) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, `Offered course with same section is already exist`);
     }
+    // get the schedules of the faculty
+    const assignedSchedules = yield offeredCourse_model_1.OfferedCourse.find({
+        semesterRegistration,
+        faculty,
+        days: { $in: days },
+    }).select('days startTime endTime');
+    const newScheduleTime = {
+        days,
+        startTime,
+        endTime,
+    };
+    assignedSchedules.forEach(schedule => {
+        const existingStartTime = new Date(`1996-01-01T${schedule.startTime}`);
+        const existingEndTime = new Date(`1996-01-01T${schedule.endTime}`);
+        const newStartingTime = new Date(`1996-01-01T${newScheduleTime.startTime}`);
+        const newEndTime = new Date(`1996-01-01T${newScheduleTime.endTime}`);
+        if (newStartingTime < existingEndTime && newEndTime > existingStartTime) {
+            throw new AppError_1.default(http_status_1.default.CONFLICT, `This faculty is not available at that time, choose other time or day`);
+        }
+    });
     // valid request
     const academicSemester = isSemesterRegistrationExist === null || isSemesterRegistrationExist === void 0 ? void 0 : isSemesterRegistrationExist.academicSemester;
     const response = yield offeredCourse_model_1.OfferedCourse.create(Object.assign(Object.assign({}, payload), { academicSemester }));
     return response;
 });
-const getAllOfferedCoursesIntoDB = () => __awaiter(void 0, void 0, void 0, function* () { });
+const getAllOfferedCoursesFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield offeredCourse_model_1.OfferedCourse.find();
+    return response;
+});
 const getSingleOfferedCourseIntoDB = () => __awaiter(void 0, void 0, void 0, function* () { });
 exports.OfferedCoursesService = {
     createOfferedCourseIntoDB,
-    getAllOfferedCoursesIntoDB,
+    getAllOfferedCoursesFromDB,
     getSingleOfferedCourseIntoDB,
 };
