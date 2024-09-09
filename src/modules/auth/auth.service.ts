@@ -1,4 +1,6 @@
 import httpStatus from 'http-status'
+import jwt from 'jsonwebtoken'
+import config from '../../config'
 import AppError from '../../errors/AppError'
 import { UserModel } from '../users/user.model'
 import { ILoginUser } from './auth.interface'
@@ -25,6 +27,18 @@ const loginUser = async (payload: ILoginUser) => {
     throw new AppError(httpStatus.FORBIDDEN, "Password doesn't matched")
   }
   // access granted, send AccessToken, RefreshToken
+  // create token and send to the client
+  const jwtPayload = {
+    userId: user.id,
+    role: user.role,
+  }
+  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+    expiresIn: '10d',
+  })
+  return {
+    accessToken,
+    needsPasswordChange: user.needsPasswordChange,
+  }
 }
 
 export const AuthServices = {
