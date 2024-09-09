@@ -42,11 +42,13 @@ const offeredCourseSchema = new mongoose_1.Schema({
         type: Number,
         required: true,
     },
-    days: {
-        type: String,
-        enum: offeredCourse_constant_1.Days,
-        required: true,
-    },
+    days: [
+        {
+            type: String,
+            enum: offeredCourse_constant_1.Days,
+            required: true,
+        },
+    ],
     startTime: {
         type: String,
         required: true,

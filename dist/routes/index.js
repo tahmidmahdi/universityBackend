@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const offeredCourse_route_1 = require("./../modules/offeredCourse/offeredCourse.route");
 const express_1 = __importDefault(require("express"));
 const academicDepartment_route_1 = require("../modules/academicDepartment/academicDepartment.route");
 const academicSemester_route_1 = require("../modules/academicSemester/academicSemester.route");
@@ -50,6 +51,10 @@ const moduleRoutes = [
     {
         path: '/semester-registrations',
         route: semesterRegistration_route_1.SemesterRegistrationRoutes,
+    },
+    {
+        path: '/offered-courses',
+        route: offeredCourse_route_1.OfferedCourseRoutes,
     },
 ];
 moduleRoutes.forEach(route => router.use(route.path, route.route));

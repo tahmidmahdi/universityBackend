@@ -11,7 +11,7 @@ export interface IOfferedCourse {
   faculty: Types.ObjectId
   maxCapacity: number
   section: number
-  days: TDays
+  days: Array<TDays>
   startTime: string
   endTime: string
 }

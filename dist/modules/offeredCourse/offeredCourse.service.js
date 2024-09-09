@@ -1,23 +1,24 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OfferedCourseValidations = void 0;
-const zod_1 = require("zod");
-const offeredCourse_constant_1 = require("./offeredCourse.constant");
-const createOfferedCourseValidationSchema = zod_1.z.object({
-    body: zod_1.z.object({
-        semesterRegistration: zod_1.z.string().trim(),
-        academicSemester: zod_1.z.string().trim(),
-        academicFaculty: zod_1.z.string().trim(),
-        academicDepartment: zod_1.z.string().trim(),
-        course: zod_1.z.string().trim(),
-        faculty: zod_1.z.string().trim(),
-        maxCapacity: zod_1.z.number(),
-        section: zod_1.z.number(),
-        days: zod_1.z.enum([...offeredCourse_constant_1.Days]),
-        startTime: zod_1.z.string(),
-        endTime: zod_1.z.string(),
-    }),
+exports.OfferedCoursesService = void 0;
+const offeredCourse_model_1 = require("./offeredCourse.model");
+const createOfferedCourseIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield offeredCourse_model_1.OfferedCourse.create(payload);
+    return response;
 });
-exports.OfferedCourseValidations = {
-    createOfferedCourseValidationSchema,
+const getAllOfferedCoursesIntoDB = () => __awaiter(void 0, void 0, void 0, function* () { });
+const getSingleOfferedCourseIntoDB = () => __awaiter(void 0, void 0, void 0, function* () { });
+exports.OfferedCoursesService = {
+    createOfferedCourseIntoDB,
+    getAllOfferedCoursesIntoDB,
+    getSingleOfferedCourseIntoDB,
 };

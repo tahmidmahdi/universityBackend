@@ -1,22 +1,17 @@
-import { z } from 'zod'
-import { Days } from './offeredCourse.constant'
+import { IOfferedCourse } from './offeredCourse.interface'
+import { OfferedCourse } from './offeredCourse.model'
 
-const createOfferedCourseValidationSchema = z.object({
-  body: z.object({
-    semesterRegistration: z.string().trim(),
-    academicSemester: z.string().trim(),
-    academicFaculty: z.string().trim(),
-    academicDepartment: z.string().trim(),
-    course: z.string().trim(),
-    faculty: z.string().trim(),
-    maxCapacity: z.number(),
-    section: z.number(),
-    days: z.enum([...Days] as [string, ...string[]]),
-    startTime: z.string(),
-    endTime: z.string(),
-  }),
-})
+const createOfferedCourseIntoDB = async (payload: IOfferedCourse) => {
+  const response = await OfferedCourse.create(payload)
+  return response
+}
 
-export const OfferedCourseValidations = {
-  createOfferedCourseValidationSchema,
+const getAllOfferedCoursesIntoDB = async () => {}
+
+const getSingleOfferedCourseIntoDB = async () => {}
+
+export const OfferedCoursesService = {
+  createOfferedCourseIntoDB,
+  getAllOfferedCoursesIntoDB,
+  getSingleOfferedCourseIntoDB,
 }

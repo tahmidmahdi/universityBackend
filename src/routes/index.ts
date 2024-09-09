@@ -1,3 +1,4 @@
+import { OfferedCourseRoutes } from './../modules/offeredCourse/offeredCourse.route'
 import express, { Router } from 'express'
 import { AcademicDepartmentRoutes } from '../modules/academicDepartment/academicDepartment.route'
 import { AcademicSemesterRoutes } from '../modules/academicSemester/academicSemester.route'
@@ -52,6 +53,10 @@ const moduleRoutes: Array<IRoutes> = [
   {
     path: '/semester-registrations',
     route: SemesterRegistrationRoutes,
+  },
+  {
+    path: '/offered-courses',
+    route: OfferedCourseRoutes,
   },
 ]
 
