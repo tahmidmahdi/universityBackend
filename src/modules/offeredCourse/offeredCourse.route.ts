@@ -14,5 +14,14 @@ router
     OfferedCourseController.createOfferedCourse,
   )
   .get('/', OfferedCourseController.getAllOfferedCourses)
+  .get('/:id', OfferedCourseController.getSingleOfferedCourses)
+  .patch(
+    '/:id',
+    validateRequest(
+      OfferedCourseValidations.updateOfferedCourseValidationSchema,
+    ),
+    OfferedCourseController.updateOfferedCourse,
+  )
+  .delete('/:id', OfferedCourseController.deleteOfferedCourseFromDB)
 
 export const OfferedCourseRoutes = router
