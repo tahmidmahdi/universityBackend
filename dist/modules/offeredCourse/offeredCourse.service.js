@@ -22,7 +22,7 @@ const faculties_model_1 = require("../faculties/faculties.model");
 const semesterRegistration_model_1 = require("../semesterRegistration/semesterRegistration.model");
 const offeredCourse_model_1 = require("./offeredCourse.model");
 const createOfferedCourseIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const { semesterRegistration, academicFaculty, academicDepartment, course, faculty, } = payload;
+    const { semesterRegistration, academicFaculty, academicDepartment, course, faculty, section, } = payload;
     // check if the semester registration id exist!
     const isSemesterRegistrationExist = yield semesterRegistration_model_1.SemesterRegistration.findById(semesterRegistration);
     if (!isSemesterRegistrationExist) {
@@ -43,6 +43,23 @@ const createOfferedCourseIntoDB = (payload) => __awaiter(void 0, void 0, void 0,
     const isFacultyExist = yield faculties_model_1.Faculty.findById(faculty);
     if (!isFacultyExist) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Faculty not found');
+    }
+    // check if the department belong to the faculty
+    const isDepartmentBelongToFaculty = yield academicDepartment_model_1.AcademicDepartment.findOne({
+        academicFaculty,
+        _id: academicDepartment,
+    });
+    if (!isDepartmentBelongToFaculty) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, `This academicDepartment:${isAcademicDepartmentExist.name} is not belong to this academicFaculty:${isAcademicFacultyExist.name}`);
+    }
+    // check if the same offered course same section in same registered semester exist
+    const isSameOfferedCourseWithSameRegisteredSemesterWithSameSection = yield offeredCourse_model_1.OfferedCourse.findOne({
+        semesterRegistration,
+        course,
+        section,
+    });
+    if (isSameOfferedCourseWithSameRegisteredSemesterWithSameSection) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, `Offered course with same section is already exist`);
     }
     // valid request
     const academicSemester = isSemesterRegistrationExist === null || isSemesterRegistrationExist === void 0 ? void 0 : isSemesterRegistrationExist.academicSemester;
