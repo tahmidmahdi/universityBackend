@@ -15,3 +15,9 @@ export interface IOfferedCourse {
   startTime: string
   endTime: string
 }
+
+export interface ISchedule {
+  days: Array<TDays>
+  startTime: string
+  endTime: string
+}

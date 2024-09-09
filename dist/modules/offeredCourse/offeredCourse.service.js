@@ -21,6 +21,7 @@ const course_model_1 = require("../course/course.model");
 const faculties_model_1 = require("../faculties/faculties.model");
 const semesterRegistration_model_1 = require("../semesterRegistration/semesterRegistration.model");
 const offeredCourse_model_1 = require("./offeredCourse.model");
+const offeredCourse_utils_1 = require("./offeredCourse.utils");
 const createOfferedCourseIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { semesterRegistration, academicFaculty, academicDepartment, course, faculty, section, days, startTime, endTime, } = payload;
     // check if the semester registration id exist!
@@ -72,15 +73,9 @@ const createOfferedCourseIntoDB = (payload) => __awaiter(void 0, void 0, void 0,
         startTime,
         endTime,
     };
-    assignedSchedules.forEach(schedule => {
-        const existingStartTime = new Date(`1996-01-01T${schedule.startTime}`);
-        const existingEndTime = new Date(`1996-01-01T${schedule.endTime}`);
-        const newStartingTime = new Date(`1996-01-01T${newScheduleTime.startTime}`);
-        const newEndTime = new Date(`1996-01-01T${newScheduleTime.endTime}`);
-        if (newStartingTime < existingEndTime && newEndTime > existingStartTime) {
-            throw new AppError_1.default(http_status_1.default.CONFLICT, `This faculty is not available at that time, choose other time or day`);
-        }
-    });
+    if ((0, offeredCourse_utils_1.hasTimeConflict)(assignedSchedules, newScheduleTime)) {
+        throw new AppError_1.default(http_status_1.default.CONFLICT, 'This faculty is not available at that time! Choose other time or day');
+    }
     // valid request
     const academicSemester = isSemesterRegistrationExist === null || isSemesterRegistrationExist === void 0 ? void 0 : isSemesterRegistrationExist.academicSemester;
     const response = yield offeredCourse_model_1.OfferedCourse.create(Object.assign(Object.assign({}, payload), { academicSemester }));
