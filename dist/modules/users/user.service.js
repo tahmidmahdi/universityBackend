@@ -96,7 +96,7 @@ const createFacultyIntoDB = (payload, password) => __awaiter(void 0, void 0, voi
 const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 0, function* () {
     // create a user object
     const userData = {};
-    //if password is not given , use deafult password
+    //if password is not given , use default password
     userData.password = password || config_1.default.default_password;
     //set student role
     userData.role = 'admin';

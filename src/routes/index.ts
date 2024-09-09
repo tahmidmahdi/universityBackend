@@ -1,14 +1,15 @@
-import { OfferedCourseRoutes } from './../modules/offeredCourse/offeredCourse.route'
 import express, { Router } from 'express'
 import { AcademicDepartmentRoutes } from '../modules/academicDepartment/academicDepartment.route'
 import { AcademicSemesterRoutes } from '../modules/academicSemester/academicSemester.route'
 import { AdminRoutes } from '../modules/admin/admin.route'
+import { AuthRoutes } from '../modules/auth/auth.route'
 import { CourseRoutes } from '../modules/course/course.route'
 import { FacultiesRoute } from '../modules/faculties/faculties.route'
 import { SemesterRegistrationRoutes } from '../modules/semesterRegistration/semesterRegistration.route'
 import { StudentRoutes } from '../modules/student/student.route'
 import { UserRoutes } from '../modules/users/user.route'
 import { AcademicFacultyRoutes } from './../modules/academicFaculty/academicFaculty.route'
+import { OfferedCourseRoutes } from './../modules/offeredCourse/offeredCourse.route'
 
 interface IRoutes {
   path: string
@@ -57,6 +58,10 @@ const moduleRoutes: Array<IRoutes> = [
   {
     path: '/offered-courses',
     route: OfferedCourseRoutes,
+  },
+  {
+    path: '/auth',
+    route: AuthRoutes,
   },
 ]
 

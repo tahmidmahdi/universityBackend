@@ -3,17 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const offeredCourse_route_1 = require("./../modules/offeredCourse/offeredCourse.route");
 const express_1 = __importDefault(require("express"));
 const academicDepartment_route_1 = require("../modules/academicDepartment/academicDepartment.route");
 const academicSemester_route_1 = require("../modules/academicSemester/academicSemester.route");
 const admin_route_1 = require("../modules/admin/admin.route");
+const auth_route_1 = require("../modules/auth/auth.route");
 const course_route_1 = require("../modules/course/course.route");
 const faculties_route_1 = require("../modules/faculties/faculties.route");
 const semesterRegistration_route_1 = require("../modules/semesterRegistration/semesterRegistration.route");
 const student_route_1 = require("../modules/student/student.route");
 const user_route_1 = require("../modules/users/user.route");
 const academicFaculty_route_1 = require("./../modules/academicFaculty/academicFaculty.route");
+const offeredCourse_route_1 = require("./../modules/offeredCourse/offeredCourse.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -55,6 +56,10 @@ const moduleRoutes = [
     {
         path: '/offered-courses',
         route: offeredCourse_route_1.OfferedCourseRoutes,
+    },
+    {
+        path: '/auth',
+        route: auth_route_1.AuthRoutes,
     },
 ];
 moduleRoutes.forEach(route => router.use(route.path, route.route));
