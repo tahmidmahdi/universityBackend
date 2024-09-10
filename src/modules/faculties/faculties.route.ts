@@ -1,11 +1,12 @@
 import express from 'express'
 import auth from '../../middlewares/auth'
+import { USER_ROLE } from '../users/user.constant'
 import { FacultyControllers } from './faculties.controller'
 
 const router = express.Router()
 
 router
-  .get('/', auth(), FacultyControllers.getAllFaculties)
+  .get('/', auth(USER_ROLE.admin), FacultyControllers.getAllFaculties)
   .get('/:facultyId', FacultyControllers.getFacultyById)
   .patch('/:facultyId', FacultyControllers.updateFacultyById)
   .delete('/:facultyId', FacultyControllers.deleteFacultyById)
