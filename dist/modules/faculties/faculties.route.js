@@ -5,10 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FacultiesRoute = void 0;
 const express_1 = __importDefault(require("express"));
+const auth_1 = __importDefault(require("../../middlewares/auth"));
 const faculties_controller_1 = require("./faculties.controller");
 const router = express_1.default.Router();
 router
-    .get('/', faculties_controller_1.FacultyControllers.getAllFaculties)
+    .get('/', (0, auth_1.default)(), faculties_controller_1.FacultyControllers.getAllFaculties)
     .get('/:facultyId', faculties_controller_1.FacultyControllers.getFacultyById)
     .patch('/:facultyId', faculties_controller_1.FacultyControllers.updateFacultyById)
     .delete('/:facultyId', faculties_controller_1.FacultyControllers.deleteFacultyById);

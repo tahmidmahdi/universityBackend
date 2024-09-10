@@ -5,6 +5,8 @@ import sendResponse from '../../utils/sendResponse'
 import { FacultyServices } from './faculties.service'
 
 const getAllFaculties = catchAsync(async (req: Request, res: Response) => {
+  console.log('test', req.user)
+
   const response = await FacultyServices.getAllFacultiesFromDB(req.query)
   sendResponse(res, {
     statusCode: httpStatus.OK,
