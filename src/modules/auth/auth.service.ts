@@ -1,10 +1,11 @@
 import bcrypt from 'bcrypt'
 import httpStatus from 'http-status'
-import jwt, { JwtPayload } from 'jsonwebtoken'
+import { JwtPayload } from 'jsonwebtoken'
 import config from '../../config'
 import AppError from '../../errors/AppError'
 import { UserModel } from '../users/user.model'
 import { ILoginUser } from './auth.interface'
+import { createToken } from './auth.utils'
 const loginUser = async (payload: ILoginUser) => {
   // check if the user exist
   const user = await UserModel.isUserExistsByCustomId(payload.id)
@@ -18,7 +19,6 @@ const loginUser = async (payload: ILoginUser) => {
     }
     throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked')
   }
-
   // checking is the password is correct
 
   const isPasswordMatched = await UserModel.isPasswordMatched(
@@ -34,11 +34,19 @@ const loginUser = async (payload: ILoginUser) => {
     userId: user.id,
     role: user.role,
   }
-  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
-    expiresIn: '10d',
-  })
+  const accessToken = await createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  )
+  const refreshToken = await createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
+  )
   return {
     accessToken,
+    refreshToken,
     needsPasswordChange: user.needsPasswordChange,
   }
 }

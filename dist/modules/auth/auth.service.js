@@ -15,10 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthServices = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const http_status_1 = __importDefault(require("http-status"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../../config"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_model_1 = require("../users/user.model");
+const auth_utils_1 = require("./auth.utils");
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // check if the user exist
     const user = yield user_model_1.UserModel.isUserExistsByCustomId(payload.id);
@@ -42,11 +42,11 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         userId: user.id,
         role: user.role,
     };
-    const accessToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.jwt_access_secret, {
-        expiresIn: '10d',
-    });
+    const accessToken = yield (0, auth_utils_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);
+    const refreshToken = yield (0, auth_utils_1.createToken)(jwtPayload, config_1.default.jwt_refresh_secret, config_1.default.jwt_refresh_expires_in);
     return {
         accessToken,
+        refreshToken,
         needsPasswordChange: user.needsPasswordChange,
     };
 });
