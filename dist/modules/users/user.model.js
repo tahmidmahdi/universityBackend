@@ -25,10 +25,14 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         required: true,
         trim: true,
+        select: 0,
     },
     needsPasswordChange: {
         type: Boolean,
         default: true,
+    },
+    passwordChangedAt: {
+        type: Date,
     },
     role: {
         type: String,
@@ -59,12 +63,18 @@ userSchema.post('save', function (document, next) {
 });
 userSchema.statics.isUserExistsByCustomId = function (id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield exports.UserModel.findOne({ id });
+        // putting + in select fields indicates show password and rest
+        return yield exports.UserModel.findOne({ id }).select('+password');
     });
 };
 userSchema.statics.isPasswordMatched = function (plainTextPassword, hashedPassword) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield bcrypt_1.default.compare(plainTextPassword, hashedPassword);
     });
+};
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (passwordChangedTimeStamp, jwtIssuedTimeStamp) {
+    const passwordChangedTime = new Date(passwordChangedTimeStamp).getTime() / 1000;
+    return passwordChangedTime > jwtIssuedTimeStamp;
+    // return passwordChangedTimeStamp > jwtIssuedTimeStamp
 };
 exports.UserModel = (0, mongoose_1.model)('User', userSchema);

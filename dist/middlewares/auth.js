@@ -16,6 +16,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../config"));
 const AppError_1 = __importDefault(require("../errors/AppError"));
+const user_model_1 = require("../modules/users/user.model");
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const auth = (...roles) => {
     return (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -23,17 +24,28 @@ const auth = (...roles) => {
         if (!token) {
             throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, 'You are not authorized');
         }
-        // verify token
-        jsonwebtoken_1.default.verify(token, config_1.default.jwt_access_secret, (error, decoded) => {
-            if (error) {
-                throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, 'You are not authorized');
+        const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_access_secret);
+        const { userId, role, iat } = decoded;
+        const user = yield user_model_1.UserModel.isUserExistsByCustomId(userId);
+        if (!user || user.isDeleted || user.status === 'blocked') {
+            if (!user) {
+                throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is not found');
             }
-            if (roles && !roles.includes(decoded === null || decoded === void 0 ? void 0 : decoded.role)) {
-                throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, 'You are not authorized');
+            if (user.isDeleted) {
+                throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is deleted');
             }
-            req.user = decoded;
-            next();
-        });
+            throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is blocked');
+        }
+        if (user.passwordChangedAt &&
+            iat &&
+            user_model_1.UserModel.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt, iat)) {
+            throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, 'You are not authorized');
+        }
+        if (roles && !roles.includes(role)) {
+            throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, 'You are not authorized');
+        }
+        req.user = decoded;
+        next();
     }));
 };
 exports.default = auth;

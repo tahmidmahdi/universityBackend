@@ -12,10 +12,14 @@ const userSchema = new Schema<IUser, UserModels>(
       type: String,
       required: true,
       trim: true,
+      select: 0,
     },
     needsPasswordChange: {
       type: Boolean,
       default: true,
+    },
+    passwordChangedAt: {
+      type: Date,
     },
     role: {
       type: String,
@@ -51,7 +55,8 @@ userSchema.post('save', function (document, next) {
 })
 
 userSchema.statics.isUserExistsByCustomId = async function (id: string) {
-  return await UserModel.findOne({ id })
+  // putting + in select fields indicates show password and rest
+  return await UserModel.findOne({ id }).select('+password')
 }
 
 userSchema.statics.isPasswordMatched = async function (
@@ -59,6 +64,17 @@ userSchema.statics.isPasswordMatched = async function (
   hashedPassword,
 ) {
   return await bcrypt.compare(plainTextPassword, hashedPassword)
+}
+
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+  passwordChangedTimeStamp: Date,
+  jwtIssuedTimeStamp: number,
+) {
+  const passwordChangedTime =
+    new Date(passwordChangedTimeStamp).getTime() / 1000
+  return passwordChangedTime > jwtIssuedTimeStamp
+
+  // return passwordChangedTimeStamp > jwtIssuedTimeStamp
 }
 
 export const UserModel = model<IUser, UserModels>('User', userSchema)

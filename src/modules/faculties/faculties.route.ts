@@ -6,7 +6,11 @@ import { FacultyControllers } from './faculties.controller'
 const router = express.Router()
 
 router
-  .get('/', auth(USER_ROLE.admin), FacultyControllers.getAllFaculties)
+  .get(
+    '/',
+    auth(USER_ROLE.admin, USER_ROLE.faculty),
+    FacultyControllers.getAllFaculties,
+  )
   .get('/:facultyId', FacultyControllers.getFacultyById)
   .patch('/:facultyId', FacultyControllers.updateFacultyById)
   .delete('/:facultyId', FacultyControllers.deleteFacultyById)

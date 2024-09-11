@@ -5,9 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthRoutes = void 0;
 const express_1 = __importDefault(require("express"));
+const auth_1 = __importDefault(require("../../middlewares/auth"));
 const validateRequest_1 = __importDefault(require("../../middlewares/validateRequest"));
+const user_constant_1 = require("../users/user.constant");
 const auth_controller_1 = require("./auth.controller");
 const auth_validations_1 = require("./auth.validations");
 const router = express_1.default.Router();
-router.post('/login', (0, validateRequest_1.default)(auth_validations_1.AuthValidation.loginValidationSchema), auth_controller_1.AuthController.loginUser);
+router
+    .post('/login', (0, validateRequest_1.default)(auth_validations_1.AuthValidation.loginValidationSchema), auth_controller_1.AuthController.loginUser)
+    .post('/change-password', (0, auth_1.default)(user_constant_1.USER_ROLE.admin, user_constant_1.USER_ROLE.faculty, user_constant_1.USER_ROLE.student), (0, validateRequest_1.default)(auth_validations_1.AuthValidation.changePasswordValidationSchema), auth_controller_1.AuthController.changePassword);
 exports.AuthRoutes = router;

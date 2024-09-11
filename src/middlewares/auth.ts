@@ -4,6 +4,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import config from '../config'
 import AppError from '../errors/AppError'
 import { TUserRole } from '../modules/users/user.interface'
+import { UserModel } from '../modules/users/user.model'
 import catchAsync from '../utils/catchAsync'
 
 const auth = (...roles: Array<TUserRole>) => {
@@ -13,18 +14,38 @@ const auth = (...roles: Array<TUserRole>) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized')
     }
 
-    // verify token
-    jwt.verify(token, config.jwt_access_secret as string, (error, decoded) => {
-      if (error) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized')
-      }
+    const decoded = jwt.verify(
+      token,
+      config.jwt_access_secret as string,
+    ) as JwtPayload
+    const { userId, role, iat } = decoded
 
-      if (roles && !roles.includes((decoded as JwtPayload)?.role)) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized')
+    const user = await UserModel.isUserExistsByCustomId(userId)
+
+    if (!user || user.isDeleted || user.status === 'blocked') {
+      if (!user) {
+        throw new AppError(httpStatus.FORBIDDEN, 'This user is not found')
       }
-      req.user = decoded as JwtPayload
-      next()
-    })
+      if (user.isDeleted) {
+        throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted')
+      }
+      throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked')
+    }
+
+    if (
+      user.passwordChangedAt &&
+      iat &&
+      UserModel.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt, iat)
+    ) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized')
+    }
+
+    if (roles && !roles.includes(role)) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized')
+    }
+
+    req.user = decoded as JwtPayload
+    next()
   })
 }
 

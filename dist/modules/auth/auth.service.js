@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthServices = void 0;
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const http_status_1 = __importDefault(require("http-status"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../../config"));
@@ -49,6 +50,34 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         needsPasswordChange: user.needsPasswordChange,
     };
 });
+const changePassword = (userData, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.UserModel.isUserExistsByCustomId(userData.userId);
+    if (!user || user.isDeleted || user.status === 'blocked') {
+        if (!user) {
+            throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is not found');
+        }
+        if (user.isDeleted) {
+            throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is deleted');
+        }
+        throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is blocked');
+    }
+    // checking is the password is correct
+    const isPasswordMatched = yield user_model_1.UserModel.isPasswordMatched(payload.oldPassword, user.password);
+    if (!isPasswordMatched) {
+        throw new AppError_1.default(http_status_1.default.FORBIDDEN, "Password doesn't matched");
+    }
+    const newHashedPassword = yield bcrypt_1.default.hash(payload.newPassword, Number(config_1.default.bcrypt_salt_rounds));
+    yield user_model_1.UserModel.findOneAndUpdate({
+        id: userData.userId,
+        role: userData.role,
+    }, {
+        password: newHashedPassword,
+        needsPasswordChange: false,
+        passwordChangedAt: new Date(),
+    });
+    return null;
+});
 exports.AuthServices = {
     loginUser,
+    changePassword,
 };
