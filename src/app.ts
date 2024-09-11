@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express, { Application, Request, Response } from 'express'
 import globalErrorHandler from './middlewares/globalErrorHandler'
@@ -9,7 +10,8 @@ const app: Application = express()
 
 // basic usages
 app.use(express.json())
-app.use(cors())
+app.use(cookieParser())
+app.use(cors({ origin: ['http://localhost:3000'] }))
 
 app.use('/api/v1', router)
 

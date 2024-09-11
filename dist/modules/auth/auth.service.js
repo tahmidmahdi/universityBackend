@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthServices = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const http_status_1 = __importDefault(require("http-status"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../../config"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const user_model_1 = require("../users/user.model");
@@ -77,7 +78,35 @@ const changePassword = (userData, payload) => __awaiter(void 0, void 0, void 0, 
     });
     return null;
 });
+const refreshToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_refresh_secret);
+    const { userId, iat } = decoded;
+    const user = yield user_model_1.UserModel.isUserExistsByCustomId(userId);
+    if (!user || user.isDeleted || user.status === 'blocked') {
+        if (!user) {
+            throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is not found');
+        }
+        if (user.isDeleted) {
+            throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is deleted');
+        }
+        throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is blocked');
+    }
+    if (user.passwordChangedAt &&
+        iat &&
+        user_model_1.UserModel.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt, iat)) {
+        throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, 'You are not authorized');
+    }
+    const jwtPayload = {
+        userId: user.id,
+        role: user.role,
+    };
+    const accessToken = yield (0, auth_utils_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);
+    return {
+        accessToken,
+    };
+});
 exports.AuthServices = {
     loginUser,
     changePassword,
+    refreshToken,
 };
