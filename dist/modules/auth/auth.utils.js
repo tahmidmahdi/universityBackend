@@ -18,7 +18,6 @@ const createToken = (jwtPayload, secret, expiresIn) => __awaiter(void 0, void 0,
     if (!jwtPayload) {
         return null;
     }
-    console.log(jwtPayload, secret, expiresIn);
     return jsonwebtoken_1.default.sign(jwtPayload, secret, {
         expiresIn,
     });

@@ -8,7 +8,6 @@ export const createToken = async (
   if (!jwtPayload) {
     return null
   }
-  console.log(jwtPayload, secret, expiresIn)
 
   return jwt.sign(jwtPayload, secret, {
     expiresIn,
