@@ -28,7 +28,7 @@ const createStudentIntoDB = async (payload: TStudent, password?: string) => {
   // year semesterCode 4digitNumber
   // if password not given, use default password
   userData.password = password || (config.default_password as string)
-
+  userData.email = payload.email
   const admissionSemester = await AcademicSemester.findById({
     _id: payload.admissionSemester,
   })
@@ -71,6 +71,8 @@ const createFacultyIntoDB = async (payload: IFaculty, password?: string) => {
     id: '',
   }
   facultyData.password = password || (config.default_password as string)
+  facultyData.email = payload.email
+
   const lastFaculty = await generateFacultyId()
   facultyData.id = lastFaculty
   const session = await startSession()
@@ -103,7 +105,7 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
 
   //if password is not given , use default password
   userData.password = password || (config.default_password as string)
-
+  userData.email = payload.email
   //set student role
   userData.role = 'admin'
   const session = await startSession()

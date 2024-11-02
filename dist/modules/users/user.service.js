@@ -32,6 +32,7 @@ const createStudentIntoDB = (payload, password) => __awaiter(void 0, void 0, voi
     // year semesterCode 4digitNumber
     // if password not given, use default password
     userData.password = password || config_1.default.default_password;
+    userData.email = payload.email;
     const admissionSemester = yield academicSemester_model_1.AcademicSemester.findById({
         _id: payload.admissionSemester,
     });
@@ -68,6 +69,7 @@ const createFacultyIntoDB = (payload, password) => __awaiter(void 0, void 0, voi
         id: '',
     };
     facultyData.password = password || config_1.default.default_password;
+    facultyData.email = payload.email;
     const lastFaculty = yield (0, user_utils_1.generateFacultyId)();
     facultyData.id = lastFaculty;
     const session = yield (0, mongoose_1.startSession)();
@@ -98,6 +100,7 @@ const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 
     const userData = {};
     //if password is not given , use default password
     userData.password = password || config_1.default.default_password;
+    userData.email = payload.email;
     //set student role
     userData.role = 'admin';
     const session = yield (0, mongoose_1.startSession)();

@@ -18,6 +18,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../../config"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
+const sendEmail_1 = require("../../utils/sendEmail");
 const user_model_1 = require("../users/user.model");
 const auth_utils_1 = require("./auth.utils");
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -105,8 +106,29 @@ const refreshToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
         accessToken,
     };
 });
+const forgotPassword = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.UserModel.isUserExistsByCustomId(id);
+    if (!user || user.isDeleted || user.status === 'blocked') {
+        if (!user) {
+            throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is not found');
+        }
+        if (user.isDeleted) {
+            throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is deleted');
+        }
+        throw new AppError_1.default(http_status_1.default.FORBIDDEN, 'This user is blocked');
+    }
+    const jwtPayload = {
+        userId: user.id,
+        role: user.role,
+    };
+    const resetToken = yield (0, auth_utils_1.createToken)(jwtPayload, config_1.default.jwt_access_secret, '10m');
+    const resetLink = `http://localhost:3000?id=${user.id}&token=${resetToken}`;
+    yield (0, sendEmail_1.sendEmail)();
+    return resetLink;
+});
 exports.AuthServices = {
     loginUser,
     changePassword,
     refreshToken,
+    forgotPassword,
 };

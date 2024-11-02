@@ -3,6 +3,7 @@ import httpStatus from 'http-status'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import config from '../../config'
 import AppError from '../../errors/AppError'
+import { sendEmail } from '../../utils/sendEmail'
 import { UserModel } from '../users/user.model'
 import { ILoginUser } from './auth.interface'
 import { createToken } from './auth.utils'
@@ -139,8 +140,35 @@ const refreshToken = async (token: string) => {
   }
 }
 
+const forgotPassword = async (id: string) => {
+  const user = await UserModel.isUserExistsByCustomId(id)
+  if (!user || user.isDeleted || user.status === 'blocked') {
+    if (!user) {
+      throw new AppError(httpStatus.FORBIDDEN, 'This user is not found')
+    }
+    if (user.isDeleted) {
+      throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted')
+    }
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked')
+  }
+  const jwtPayload = {
+    userId: user.id,
+    role: user.role,
+  }
+
+  const resetToken = await createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    '10m',
+  )
+  const resetLink = `http://localhost:3000?id=${user.id}&token=${resetToken}`
+  await sendEmail()
+  return resetLink
+}
+
 export const AuthServices = {
   loginUser,
   changePassword,
   refreshToken,
+  forgotPassword,
 }

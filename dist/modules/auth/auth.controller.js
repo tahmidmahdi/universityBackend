@@ -55,8 +55,19 @@ const refreshToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: response,
     });
 }));
+const forgotPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id: userId } = req.body;
+    const response = yield auth_service_1.AuthServices.forgotPassword(userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Reset link is sent successfully',
+        data: response,
+    });
+}));
 exports.AuthController = {
     loginUser,
     changePassword,
     refreshToken,
+    forgotPassword,
 };
