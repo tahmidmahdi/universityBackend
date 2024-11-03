@@ -159,11 +159,46 @@ const forgotPassword = async (id: string) => {
   const resetToken = await createToken(
     jwtPayload,
     config.jwt_access_secret as string,
-    '10m',
+    config.reset_password_ui_link_expires_in as string,
   )
-  const resetLink = `http://localhost:3000?id=${user.id}&token=${resetToken}`
-  await sendEmail()
+  const resetLink = `${config.reset_password_ui_link}?id=${user.id}&token=${resetToken}`
+  await sendEmail(user.email, resetLink)
   return resetLink
+}
+
+const resetPassword = async (
+  id: string,
+  newPassword: string,
+  token: string,
+) => {
+  const user = await UserModel.isUserExistsByCustomId(id)
+  if (!user || user.isDeleted || user.status === 'blocked') {
+    if (!user) {
+      throw new AppError(httpStatus.FORBIDDEN, 'This user is not found')
+    }
+    if (user.isDeleted) {
+      throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted')
+    }
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked')
+  }
+  const decoded = jwt.verify(
+    token,
+    config.jwt_access_secret as string,
+  ) as JwtPayload
+  const { userId } = decoded
+  if (userId !== id) {
+    throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized')
+  }
+  const newHashedPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.bcrypt_salt_rounds),
+  )
+
+  await UserModel.findOneAndUpdate(
+    { id },
+    { password: newHashedPassword, passwordChangedAt: new Date() },
+  )
+  return null
 }
 
 export const AuthServices = {
@@ -171,4 +206,5 @@ export const AuthServices = {
   changePassword,
   refreshToken,
   forgotPassword,
+  resetPassword,
 }

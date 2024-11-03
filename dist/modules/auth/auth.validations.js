@@ -24,9 +24,16 @@ const forgotPasswordValidationSchema = zod_1.z.object({
         id: zod_1.z.string({ required_error: 'User id is required' }),
     }),
 });
+const resetPasswordValidationSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        newPassword: zod_1.z.string({ required_error: 'Password is required' }),
+        id: zod_1.z.string({ required_error: 'User id is required' }),
+    }),
+});
 exports.AuthValidation = {
     loginValidationSchema,
     changePasswordValidationSchema,
     refreshTokenValidationSchema,
     forgotPasswordValidationSchema,
+    resetPasswordValidationSchema,
 };
