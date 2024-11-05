@@ -7,6 +7,7 @@ import { UserServices } from './user.service'
 
 const createStudent = catchAsync(async (req: Request, res: Response) => {
   console.log(req.file)
+  console.log(req.body)
 
   const { password, student } = req.body
   const response = await UserServices.createStudentIntoDB(student, password)

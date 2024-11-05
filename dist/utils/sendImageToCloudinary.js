@@ -12,7 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.upload = void 0;
 const cloudinary_1 = require("cloudinary");
+const multer_1 = __importDefault(require("multer"));
 const config_1 = __importDefault(require("../config"));
 const sendImageToCloudinary = () => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
@@ -30,4 +32,14 @@ const sendImageToCloudinary = () => __awaiter(void 0, void 0, void 0, function* 
     });
     return uploadResult === null || uploadResult === void 0 ? void 0 : uploadResult.secure_url;
 });
+const storage = multer_1.default.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, `${process.cwd()}/uploads`);
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        cb(null, file.fieldname + '-' + uniqueSuffix);
+    },
+});
+exports.upload = (0, multer_1.default)({ storage: storage });
 exports.default = sendImageToCloudinary;

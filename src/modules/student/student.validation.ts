@@ -38,7 +38,7 @@ const createStudentValidationSchema = z.object({
       permanentAddress: z.string().min(1),
       guardian: guardianValidationSchema,
       localGuardian: localGuardianValidationSchema,
-      profileImg: z.string().optional(),
+      // profileImg: z.string().optional(),
     }),
   }),
 })

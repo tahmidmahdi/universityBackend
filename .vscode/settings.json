@@ -1,5 +1,12 @@
 {
-  "cSpell.words": ["Cloudinary", "datetime", "Fairviews", "lucide", "tanstack"],
+  "cSpell.words": [
+    "Cloudinary",
+    "datetime",
+    "Fairviews",
+    "fieldname",
+    "lucide",
+    "tanstack"
+  ],
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
