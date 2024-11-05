@@ -19,7 +19,11 @@ import {
   generateStudentId,
 } from './user.utils'
 
-const createStudentIntoDB = async (payload: TStudent, password?: string) => {
+const createStudentIntoDB = async (
+  file: Express.Multer.File,
+  payload: TStudent,
+  password?: string,
+) => {
   // create role
   const userData: Partial<IUser> = {
     role: 'student',
@@ -41,8 +45,8 @@ const createStudentIntoDB = async (payload: TStudent, password?: string) => {
     userData.id = await generateStudentId(
       admissionSemester as IAcademicSemester,
     )
-    const imageUrl = await sendImageToCloudinary()
-    console.log(imageUrl)
+    const imageName = `${userData.id}-${payload.name.firstName}`
+    const profileImg = await sendImageToCloudinary(imageName, file.path)
     // create a user: transaction -1
     const response = await UserModel.create([userData], { session })
     if (!response.length) {
@@ -51,6 +55,7 @@ const createStudentIntoDB = async (payload: TStudent, password?: string) => {
     // set id and _id as user
     payload.id = response[0].id
     payload.user = response[0]._id
+    payload.profileImg = profileImg
 
     // create a student: transaction -2
     const newStudent = await Student.create([payload], { session })

@@ -6,11 +6,12 @@ import sendResponse from '../../utils/sendResponse'
 import { UserServices } from './user.service'
 
 const createStudent = catchAsync(async (req: Request, res: Response) => {
-  console.log(req.file)
-  console.log(req.body)
-
   const { password, student } = req.body
-  const response = await UserServices.createStudentIntoDB(student, password)
+  const response = await UserServices.createStudentIntoDB(
+    req.file as Express.Multer.File,
+    student,
+    password,
+  )
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

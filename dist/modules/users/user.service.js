@@ -24,7 +24,7 @@ const faculties_model_1 = require("../faculties/faculties.model");
 const student_model_1 = require("../student/student.model");
 const user_model_1 = require("./user.model");
 const user_utils_1 = require("./user.utils");
-const createStudentIntoDB = (payload, password) => __awaiter(void 0, void 0, void 0, function* () {
+const createStudentIntoDB = (file, payload, password) => __awaiter(void 0, void 0, void 0, function* () {
     // create role
     const userData = {
         role: 'student',
@@ -41,8 +41,8 @@ const createStudentIntoDB = (payload, password) => __awaiter(void 0, void 0, voi
     try {
         session.startTransaction();
         userData.id = yield (0, user_utils_1.generateStudentId)(admissionSemester);
-        const imageUrl = yield (0, sendImageToCloudinary_1.default)();
-        console.log(imageUrl);
+        const imageName = `${userData.id}-${payload.name.firstName}`;
+        const profileImg = yield (0, sendImageToCloudinary_1.default)(imageName, file.path);
         // create a user: transaction -1
         const response = yield user_model_1.UserModel.create([userData], { session });
         if (!response.length) {
@@ -51,6 +51,7 @@ const createStudentIntoDB = (payload, password) => __awaiter(void 0, void 0, voi
         // set id and _id as user
         payload.id = response[0].id;
         payload.user = response[0]._id;
+        payload.profileImg = profileImg;
         // create a student: transaction -2
         const newStudent = yield student_model_1.Student.create([payload], { session });
         if (!newStudent.length) {
