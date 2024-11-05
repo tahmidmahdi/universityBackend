@@ -2,6 +2,7 @@ import httpStatus from 'http-status'
 import { startSession } from 'mongoose'
 import config from '../../config'
 import AppError from '../../errors/AppError'
+import sendImageToCloudinary from '../../utils/sendImageToCloudinary'
 import { IAcademicSemester } from '../academicSemester/academicSemester.interface'
 import { AcademicSemester } from '../academicSemester/academicSemester.model'
 import { TAdmin } from '../admin/admin.interface'
@@ -40,6 +41,8 @@ const createStudentIntoDB = async (payload: TStudent, password?: string) => {
     userData.id = await generateStudentId(
       admissionSemester as IAcademicSemester,
     )
+    const imageUrl = await sendImageToCloudinary()
+    console.log(imageUrl)
     // create a user: transaction -1
     const response = await UserModel.create([userData], { session })
     if (!response.length) {
@@ -114,6 +117,7 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
     session.startTransaction()
     //set  generated id
     userData.id = await generateAdminId()
+    // send image to cloudinary
 
     // create a user (transaction-1)
     const newUser = await UserModel.create([userData], { session })
@@ -144,8 +148,34 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   }
 }
 
+const getMeFromDB = async (userId: string, role: string) => {
+  if (role === 'student') {
+    const response = await Student.findOne({ id: userId }).populate('user')
+    return response
+  }
+  if (role === 'faculty') {
+    const response = await Faculty.findOne({ id: userId }).populate('user')
+    return response
+  }
+
+  const response = await Admin.findOne({ id: userId }).populate('user')
+  return response
+}
+
+const changeStatusIntoDB = async (id: string, payload: { status: string }) => {
+  const { status } = payload
+  const response = await UserModel.findByIdAndUpdate(
+    id,
+    { status },
+    { new: true },
+  )
+  return response
+}
+
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  getMeFromDB,
+  changeStatusIntoDB,
 }

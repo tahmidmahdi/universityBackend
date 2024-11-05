@@ -18,6 +18,7 @@ const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
 const user_service_1 = require("./user.service");
 const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.file);
     const { password, student } = req.body;
     const response = yield user_service_1.UserServices.createStudentIntoDB(student, password);
     (0, sendResponse_1.default)(res, {
@@ -47,8 +48,30 @@ const createAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         data: result,
     });
 }));
+const getMe = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId, role } = req.user;
+    const result = yield user_service_1.UserServices.getMeFromDB(userId, role);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'User data fetched successfully',
+        data: result,
+    });
+}));
+const changeStatus = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield user_service_1.UserServices.changeStatusIntoDB(id, req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Status changed successfully',
+        data: result,
+    });
+}));
 exports.UserControllers = {
     createStudent,
     createFaculty,
     createAdmin,
+    getMe,
+    changeStatus,
 };

@@ -1,10 +1,13 @@
 import { Request, Response } from 'express'
 import httpStatus from 'http-status'
+import { JwtPayload } from 'jsonwebtoken'
 import catchAsync from '../../utils/catchAsync'
 import sendResponse from '../../utils/sendResponse'
 import { UserServices } from './user.service'
 
 const createStudent = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.file)
+
   const { password, student } = req.body
   const response = await UserServices.createStudentIntoDB(student, password)
   sendResponse(res, {
@@ -28,9 +31,7 @@ const createFaculty = catchAsync(async (req: Request, res: Response) => {
 
 const createAdmin = catchAsync(async (req, res) => {
   const { password, admin: adminData } = req.body
-
   const result = await UserServices.createAdminIntoDB(password, adminData)
-
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -39,8 +40,32 @@ const createAdmin = catchAsync(async (req, res) => {
   })
 })
 
+const getMe = catchAsync(async (req: Request, res: Response) => {
+  const { userId, role } = req.user as JwtPayload
+  const result = await UserServices.getMeFromDB(userId, role)
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User data fetched successfully',
+    data: result,
+  })
+})
+
+const changeStatus = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params
+  const result = await UserServices.changeStatusIntoDB(id, req.body)
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Status changed successfully',
+    data: result,
+  })
+})
+
 export const UserControllers = {
   createStudent,
   createFaculty,
   createAdmin,
+  getMe,
+  changeStatus,
 }

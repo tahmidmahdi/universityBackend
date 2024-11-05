@@ -80,7 +80,7 @@ const changePassword = (userData, payload) => __awaiter(void 0, void 0, void 0, 
     return null;
 });
 const refreshToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
-    const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_refresh_secret);
+    const decoded = (0, auth_utils_1.verifyToken)(token, config_1.default.jwt_refresh_secret);
     const { userId, iat } = decoded;
     const user = yield user_model_1.UserModel.isUserExistsByCustomId(userId);
     if (!user || user.isDeleted || user.status === 'blocked') {

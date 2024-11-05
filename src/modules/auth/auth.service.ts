@@ -6,7 +6,7 @@ import AppError from '../../errors/AppError'
 import { sendEmail } from '../../utils/sendEmail'
 import { UserModel } from '../users/user.model'
 import { ILoginUser } from './auth.interface'
-import { createToken } from './auth.utils'
+import { createToken, verifyToken } from './auth.utils'
 const loginUser = async (payload: ILoginUser) => {
   // check if the user exist
   const user = await UserModel.isUserExistsByCustomId(payload.id)
@@ -98,10 +98,7 @@ const changePassword = async (
 }
 
 const refreshToken = async (token: string) => {
-  const decoded = jwt.verify(
-    token,
-    config.jwt_refresh_secret as string,
-  ) as JwtPayload
+  const decoded = verifyToken(token, config.jwt_refresh_secret as string)
   const { userId, iat } = decoded
 
   const user = await UserModel.isUserExistsByCustomId(userId)

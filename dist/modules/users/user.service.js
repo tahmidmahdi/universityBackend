@@ -17,6 +17,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const mongoose_1 = require("mongoose");
 const config_1 = __importDefault(require("../../config"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
+const sendImageToCloudinary_1 = __importDefault(require("../../utils/sendImageToCloudinary"));
 const academicSemester_model_1 = require("../academicSemester/academicSemester.model");
 const admin_model_1 = require("../admin/admin.model");
 const faculties_model_1 = require("../faculties/faculties.model");
@@ -40,6 +41,8 @@ const createStudentIntoDB = (payload, password) => __awaiter(void 0, void 0, voi
     try {
         session.startTransaction();
         userData.id = yield (0, user_utils_1.generateStudentId)(admissionSemester);
+        const imageUrl = yield (0, sendImageToCloudinary_1.default)();
+        console.log(imageUrl);
         // create a user: transaction -1
         const response = yield user_model_1.UserModel.create([userData], { session });
         if (!response.length) {
@@ -108,6 +111,7 @@ const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 
         session.startTransaction();
         //set  generated id
         userData.id = yield (0, user_utils_1.generateAdminId)();
+        // send image to cloudinary
         // create a user (transaction-1)
         const newUser = yield user_model_1.UserModel.create([userData], { session });
         //create a admin
@@ -132,8 +136,27 @@ const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 
         throw new Error('Error in creating admin');
     }
 });
+const getMeFromDB = (userId, role) => __awaiter(void 0, void 0, void 0, function* () {
+    if (role === 'student') {
+        const response = yield student_model_1.Student.findOne({ id: userId }).populate('user');
+        return response;
+    }
+    if (role === 'faculty') {
+        const response = yield faculties_model_1.Faculty.findOne({ id: userId }).populate('user');
+        return response;
+    }
+    const response = yield admin_model_1.Admin.findOne({ id: userId }).populate('user');
+    return response;
+});
+const changeStatusIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { status } = payload;
+    const response = yield user_model_1.UserModel.findByIdAndUpdate(id, { status }, { new: true });
+    return response;
+});
 exports.UserServices = {
     createStudentIntoDB,
     createFacultyIntoDB,
     createAdminIntoDB,
+    getMeFromDB,
+    changeStatusIntoDB,
 };
